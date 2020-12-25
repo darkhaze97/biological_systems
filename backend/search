@@ -1,0 +1,48 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+
+#The user passes in the inputs.
+#For now, I will make it a command line input.
+#Also, for now, I will assume that the user puts in the correct molecule name.
+
+usage = "Usage: search [molecule] [molecule]"
+db = None
+
+#Process command line args
+argc = len(sys.argv)
+
+#Grab the molecules that have been inputted.
+molecule1 = sys.argv[1]
+if (argc <= 3 and argc >= 2):
+    molecule1 = sys.argv[1]
+    if (argc == 3):
+        molecule2 = sys.argv[2]
+else:
+    print(usage)
+    exit(1) 
+
+try:
+    db = psycopg2.connect("dbname=biological_systems")
+    cursor = db.cursor()
+    #Big note: We do not know whether molecule1 is a protein or nucleic acid. This means that
+    #we will have to search through every table to see if molecule1's name appears in any.
+    #If there is a single match for name, then print out info. If there is more than one,
+    #have the user select the info. If no match, then perform a completing match, which tries
+    #to match the input as closely to any names in the database.
+    if (argc == 2):
+        query = """
+                    select *
+                    from    Proteins p
+                    where p.name = %s
+                """
+        cursor.execute(query, [molecule1])
+        for tup in cursor.fetchall():
+            print(tup[1])
+except psycopg2.Error as err:
+    
+    print("No")
+finally:
+    print("Yes")
