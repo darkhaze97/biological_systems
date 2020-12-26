@@ -16,7 +16,7 @@ create type proteinNucleicAcidInteractions as (
     protein_cleaves boolean
 );
 
---====================================PROTEIN | NUCLEIC ACID==================================================
+--====================================PROTEIN | NUCLEIC ACID===============================================
 
 --The function below returns all the interactions that the protein has with the nucleic acid.
 create or replace function

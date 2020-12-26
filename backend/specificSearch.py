@@ -47,9 +47,9 @@ def makeSpecificItem(name1, type1, name2, type2):
     we will create an object, proteinNucleicAcid.
     """
     #This may get a bit hard codey... Perhaps there is a better way to do this?
-    if (type1 == "PROTEINS" and type2 == "NUCLEIC ACIDS"):
+    if (type1 == "PROTEIN" and type2 == "NUCLEIC ACID"):
         return proteinNucleicAcid(name1, name2)
-    elif (type1 == "NUCLEIC ACIDS" and type2 == "PROTEINS"):
+    elif (type1 == "NUCLEIC ACID" and type2 == "PROTEIN"):
         return proteinNucleicAcid(name2, name1)
-    elif (type1 == "PROTEINS" and type2 == "PROTEINS"):
+    elif (type1 == "PROTEIN" and type2 == "PROTEIN"):
         return proteinProtein(name1, name2)
