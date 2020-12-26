@@ -3,44 +3,56 @@
 import sys
 import psycopg2
 
+from specificSearch import proteinNucleicAcid, makeSpecificItem
+
 
 #The user passes in the inputs.
 #For now, I will make it a command line input.
 #Also, for now, I will assume that the user puts in the correct molecule name.
 
-usage = "Usage: search [molecule] [molecule]"
+usage = "Usage: search [molecule] [filter] [molecule] [filter]"
 db = None
 
 #Process command line args
 argc = len(sys.argv)
 
 #Grab the molecules that have been inputted.
-molecule1 = sys.argv[1]
-if (argc <= 3 and argc >= 2):
+molecule1Type = None
+molecule2Type = None
+if (argc == 3 or argc == 5):
     molecule1 = sys.argv[1]
-    if (argc == 3):
-        molecule2 = sys.argv[2]
+    molecule1Type = sys.argv[2] + "S"
+    if (argc == 5):
+        molecule2 = sys.argv[3]
+        molecule2Type = sys.argv[4] + "S"
 else:
     print(usage)
-    exit(1) 
+    exit(1)
 
 try:
     db = psycopg2.connect("dbname=biological_systems")
     cursor = db.cursor()
-    #Big note: We do not know whether molecule1 is a protein or nucleic acid. This means that
-    #we will have to search through every table to see if molecule1's name appears in any.
-    #If there is a single match for name, then print out info. If there is more than one,
-    #have the user select the info. If no match, then perform a completing match, which tries
-    #to match the input as closely to any names in the database.
-    if (argc == 2):
-        query = """
-                    select *
-                    from    Proteins p
-                    where p.name = %s
-                """
-        cursor.execute(query, [molecule1])
-        for tup in cursor.fetchall():
-            print(tup[1])
+
+    #Search for names in the db. The db returns tuples to here. From here, the user chooses which molecules 
+    #to use. Note that the interactions between any similar matching molecules are shown (if 2 molecules are provided and there are
+    #no exact matches)
+    #and if only one molecule is provided, then interactions are not provided.
+    #Tomorrow: Split the algorithms for each case. Devise what to do for each.
+
+    #Should make a file that helps sort out which molecule1Type or molecule2Type connections to use...
+
+    if (argc == 3):
+        print("Okay")
+    elif (argc == 5):
+        #Specific and specific case
+        #Cool note: May not need to separate specific and non-specific cases if I am writing the functions
+        #in plpgsql --> check specificSearch makeSpecificItem, because I can also put in the general case there, and then
+        #make a general case object
+        if (molecule1Type != "ANY" and molecule2Type != "ANY"):
+            specificSearchItem = makeSpecificItem(molecule1, molecule1Type, molecule2, molecule2Type)
+            if (specificSearchItem != None):
+                specificSearchItem.query()
+
 except psycopg2.Error as err:
     
     print("No")
