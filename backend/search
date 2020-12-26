@@ -50,8 +50,17 @@ try:
         #make a general case object
         if (molecule1Type != "ANY" and molecule2Type != "ANY"):
             specificSearchItem = makeSpecificItem(molecule1, molecule1Type, molecule2, molecule2Type)
+            query = None
             if (specificSearchItem != None):
-                specificSearchItem.query()
+                specificSearchItem.query(cursor)
+                for tup in specificSearchItem.getTuples():
+                    print(tup[0])
+                    print(tup[4])
+                    print(tup[5])
+                    print(tup[6])
+    
+            
+
 
 except psycopg2.Error as err:
     
