@@ -43,11 +43,8 @@ def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
             query = None
             if (specificSearchItem != None):
                 specificSearchItem.query(cursor)
-                for tup in specificSearchItem.getTuples():
-                    print(tup[0])
-                    print(tup[4])
-                    print(tup[5])
-                    print(tup[6])
+                print(specificSearchItem.getTuples())
+
     except psycopg2.Error as err:
         print("No")
     finally:
