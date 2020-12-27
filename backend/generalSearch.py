@@ -37,6 +37,8 @@ class generalGeneral(generalSearch):
             self.ret_dict[key] = ret_tups[key]
 
 #class generalProtein():
+#Make sure that the order of the molecules that are passed in are maintained
+#For this case, we would search through every 
 
 #class generalNucleicAcid():
 

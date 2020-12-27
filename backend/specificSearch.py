@@ -29,16 +29,16 @@ class specificSearch(ABC):
     def checkInteractions(self, ret_dict, tups, column_names):
         interaction_dict = {}
         for tup in tups:
-            if ((tup[0] + " (" + self.type1 + ": " + str(tup[1]) + ")") not in interaction_dict.keys()):
+            if ((tup[0], self.type1, tup[1]) not in interaction_dict.keys()):
                 #If we do not have the tuple as a key yet, add it, and make it point to a
                 #list (of dictionaries)
-                ret_dict[tup[0] + " (" + self.type1 + ": " + str(tup[1]) + ")"] = []
-            interaction_dict[tup[2] + " (" + self.type2 + ": " + str(tup[3]) + ")"] = []
+                ret_dict[(tup[0], self.type1, tup[1])] = []
+            interaction_dict[(tup[2], self.type2, tup[3])] = []
             #Scan through the return tuple list, only adding on if we have values for the tuples...
             for i in range(4, len(tup)):
                 if (tup[i] == True):
-                    interaction_dict[tup[2] + " (" + self.type2 + ": " + str(tup[3]) + ")"].append(column_names[i])
-            ret_dict[tup[0] + " (" + self.type1 + ": " + str(tup[1]) + ")"].append(interaction_dict)
+                    interaction_dict[(tup[2], self.type2, tup[3])].append(column_names[i])
+            ret_dict[(tup[0], self.type1, tup[1])].append(interaction_dict)
 
 class uniqueMolecules(specificSearch):
     def query(self, cursor):
@@ -66,6 +66,9 @@ class identicalMolecules(specificSearch):
 
 class proteinNucleicAcid(uniqueMolecules):
     def __init__(self, name1, name2):
+        """
+            Here, molecule1 is the protein, and molecule2 is the nucleic acid.
+        """
         self.molecule1 = name1
         self.molecule2 = name2
         self.type1 = "PROTEIN"
@@ -79,8 +82,13 @@ class proteinNucleicAcid(uniqueMolecules):
 
 class proteinProtein(identicalMolecules):
     def __init__(self, name1, name2):
+        """
+            Here, both molecules are proteins.
+        """
         self.molecule1 = name1
         self.molecule2 = name2
+        self.type1 = "PROTEIN"
+        self.type2 = "PROTEIN"
         self.queryString = """
                             select * from proteinProtein(%s, %s)
                            """
