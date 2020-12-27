@@ -44,7 +44,7 @@ create table Nucleic_Acids (
     origin                  text not null,
     type                    Nucleic_Acid_Types not null,
     hydrolysed_by           text,
-    codes_for               serial,
+    codes_for               integer,
     primary key (id),
     foreign key (codes_for) references Proteins(id)
 );

@@ -1,6 +1,9 @@
 -- Written by Tim Huang
 
 -- I will create some types that will be the return type of some plpgsql functions.
+-- Note that each section only deals with the interaction between molecule1 to molecule2.
+-- i.e. there is directionality with this. I am not simply swapping the orientation of molecule1
+-- and molecule2
 
 drop function if exists proteinNucleicAcid;
 drop function if exists proteinNucleicAcidCodesFor;

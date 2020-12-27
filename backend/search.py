@@ -4,6 +4,7 @@ import sys
 import psycopg2
 
 from specificSearch import proteinNucleicAcid, makeSpecificItem
+from generalSearch import *
 
 
 #The user passes in the inputs into the functions.
@@ -44,6 +45,12 @@ def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
             if (specificSearchItem != None):
                 specificSearchItem.query(cursor)
                 print(specificSearchItem.getTuples())
+        elif (molecule1Type == "ANY" or molecule2Type == "ANY"):
+            generalSearchItem = makeGeneralItem(molecule1, molecule1Type, molecule2, molecule2Type)
+            query = None
+            if (generalSearchItem != None): 
+                generalSearchItem.query(cursor)
+                print(generalSearchItem.getTuples())
 
     except psycopg2.Error as err:
         print("No")
