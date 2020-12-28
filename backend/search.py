@@ -15,7 +15,7 @@ def searchOne(molecule1, molecule1Type):
         db = psycopg2.connect("dbname=biological_systems")
         cursor = db.cursor()
     except psycopg2.Error as err:
-        print("Error in searching one!")
+        print("DB Error: ", err)
     finally:
         print("Ending.")
         if (db):
@@ -53,8 +53,8 @@ def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
                 print(generalSearchItem.getTuples())
 
     except psycopg2.Error as err:
-        print("No")
+        print("DB Error: ", err)
     finally:
-        print("Ending.")
+        print("Closing connection.")
         if (db):
             db.close()

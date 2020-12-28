@@ -29,16 +29,16 @@ class specificSearch(ABC):
     def checkInteractions(self, ret_dict, tups, column_names):
         interaction_dict = {}
         for tup in tups:
-            if ((tup[0], self.type1, tup[1]) not in interaction_dict.keys()):
+            if ((tup[0], tup[1], tup[2]) not in interaction_dict.keys()):
                 #If we do not have the tuple as a key yet, add it, and make it point to a
                 #list (of dictionaries)
-                ret_dict[(tup[0], self.type1, tup[1])] = []
-            interaction_dict[(tup[2], self.type2, tup[3])] = []
+                ret_dict[(tup[0], tup[1], tup[2])] = []
+            interaction_dict[(tup[3], tup[4], tup[5])] = []
             #Scan through the return tuple list, only adding on if we have values for the tuples...
-            for i in range(4, len(tup)):
+            for i in range(6, len(tup)):
                 if (tup[i] == True):
-                    interaction_dict[(tup[2], self.type2, tup[3])].append(column_names[i])
-            ret_dict[(tup[0], self.type1, tup[1])].append(interaction_dict)
+                    interaction_dict[(tup[3], tup[4], tup[5])].append(column_names[i])
+            ret_dict[(tup[0], tup[1], tup[2])].append(interaction_dict)
 
 class uniqueMolecules(specificSearch):
     def query(self, cursor):
@@ -65,6 +65,10 @@ class identicalMolecules(specificSearch):
 #Below will be the specific classes that will be instantiated. 
 
 class proteinNucleicAcid(uniqueMolecules):
+    """
+        This class deals with all the protein --> Nucleic acid interactions as well as
+        the nucleic acid --> protein interactions
+    """
     def __init__(self, name1, name2):
         """
             Here, molecule1 is the protein, and molecule2 is the nucleic acid.
@@ -95,6 +99,18 @@ class proteinProtein(identicalMolecules):
         #Note: Here, we will call the queryString twice, but change the order of molecule1 and 2
         #as the arguments
 
+class nucleicAcidNucleicAcid(identicalMolecules):
+    def __init__(self, name1, name2):
+        """
+            Here, both molecules are nucleic acids.
+        """
+        self.molecule1 = name1
+        self.molecule2 = name2
+        self.type1 = "NUCLEIC ACID"
+        self.type2 = "NUCLEIC ACID"
+        self.queryString =  """
+                                select * from nucleicAcidNucleicAcid(%s, %s)
+                            """
 
 
 

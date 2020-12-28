@@ -10,20 +10,27 @@ drop function if exists proteinNucleicAcidCodesFor;
 drop function if exists proteinNucleicAcidProteinCleaves;
 drop function if exists nucleicAcidProtein;
 drop function if exists proteinNucleicAcidBindsTo;
+drop function if exists proteinProtein;
+drop function if exists nucleicAcidNucleicAcid;
 drop type if exists proteinNucleicAcidInteractions;
 drop type if exists nucleicAcidProteinInteractions;
+drop type if exists proteinProteinInteractions;
+drop type if exists nucleicAcidNucleicAcidInteractions;
+
+
+--====================================PROTEIN | NUCLEIC ACID===============================================
 
 --This type represents protein --> nucleic acid interactions
 create type proteinNucleicAcidInteractions as (
     protein         text,
+    molecule1type   text,
     protein_id      integer,
     nucleic_acid    text,
+    molecule2type   text,
     nucleic_acid_id integer,
     binds_to        boolean,
     protein_cleaves boolean
 );
-
---====================================PROTEIN | NUCLEIC ACID===============================================
 
 --The function below returns all the interactions that the protein has with the nucleic acid.
 create or replace function
@@ -32,6 +39,9 @@ as $$
 declare
     interactions proteinNucleicAcidInteractions;
 begin
+    select 'PROTEIN' into interactions.molecule1type;
+    select 'NUCLEIC ACID' into interactions.molecule2type;
+
     --Check if the protein cleaves the nucleic acid.
     interactions.protein_cleaves = proteinNucleicAcidProteinCleaves($1, $2);
 
@@ -95,8 +105,10 @@ $$ language plpgsql;
 --This type represents nucleic acids --> protein interactions
 create type nucleicAcidProteinInteractions as (
     nucleic_acid    text,
+    molecule1type   text, --Note that this contains the table name.
     nucleic_acid_id integer,
     protein         text,
+    molecule2type   text,
     protein_id      text,
     codes_for       boolean
 );
@@ -109,6 +121,9 @@ as $$
 declare 
     interactions nucleicAcidProteinInteractions;
 begin
+    select 'NUCLEIC ACID' into interactions.molecule1type;
+    select 'PROTEIN' into interactions.molecule2type;
+
     --Check if the nucleicAcid codes for the protein
     interactions.codes_for = proteinNucleicAcidCodesFor($1, $2);
 
@@ -142,4 +157,71 @@ begin
     end if;
     return false;
 end;
+$$ language plpgsql;
+
+--====================================PROTEIN | PROTEIN==========================================
+
+--This type represents protein --> protein interactions
+create type proteinProteinInteractions as (
+    protein1        text,
+    molecule1type   text,
+    protein1_id     integer,
+    protein2        text,
+    molecule2type   text,
+    protein2_id     integer
+);
+
+create or replace function
+    proteinProtein(name1 text, name2 text) returns setof proteinProteinInteractions
+as $$
+declare
+    interactions proteinProteinInteractions;
+begin
+    select 'PROTEIN' into interactions.molecule1type;
+    select 'PROTEIN' into interactions.molecule2type;
+    --Make any checks... Currently, I do not have any interactions between protein --> protein,
+    --so I'll leave the if statement below as false
+    if (false) then
+        select name, id into interactions.protein1, interactions.protein1_id
+        from    Proteins
+        where name = $1;
+        select name, id into interactions.protein2, interactions.protein2_id
+        from    Proteins
+        where name = $2;
+        return next interactions;
+    end if;
+end
+$$ language plpgsql;
+
+--================================NUCLEIC ACID | NUCLEIC ACID========================================
+
+--This type represents nucleic acid --> nucleic acid interactions
+create type nucleicAcidNucleicAcidInteractions as (
+    nucleicAcid1    text,
+    molecule1type   text,
+    nucleicAcid1_id integer,
+    nucleicAcid2    text,
+    molecule2type   text,
+    nucleicAcid2_id integer
+);
+
+create or replace function
+    nucleicAcidNucleicAcid(name1 text, name2 text) returns setof nucleicAcidNucleicAcidInteractions
+as $$
+declare
+    interactions nucleicAcidNucleicAcidInteractions;
+begin
+    select 'NUCLEIC ACID' into interactions.molecule1type;
+    select 'NUCLEIC ACID' into interactions.molecule2type;
+    --Same as the PROTEIN | PROTEIN case
+    if (false) then
+        select name, id into interactions.nucleicAcid1, interactions.nucleicAcid1_id
+        from    Nucleic_Acids
+        where name = $1;
+        select name, id into interactions.nucleicAcid2, interactions.nucleicAcid2_id
+        from    Nucleic_Acids
+        where name = $2;
+        return next interactions;
+    end if;
+end
 $$ language plpgsql;
