@@ -3,8 +3,8 @@
 import sys
 import psycopg2
 
-from specificSearch import proteinNucleicAcid, makeSpecificItem
-from generalSearch import *
+from specificSearch import makeSpecificItem
+from generalSearch import makeGeneralItem
 
 
 #The user passes in the inputs into the functions.
@@ -23,6 +23,7 @@ def searchOne(molecule1, molecule1Type):
 
 def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
     db = None
+    return_dict = {}
     try:
         db = psycopg2.connect("dbname=biological_systems")
         cursor = db.cursor()
@@ -44,13 +45,13 @@ def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
             query = None
             if (specificSearchItem != None):
                 specificSearchItem.query(cursor)
-                print(specificSearchItem.getTuples())
+                return_dict = specificSearchItem.getTuples()
         elif (molecule1Type == "ANY" or molecule2Type == "ANY"):
             generalSearchItem = makeGeneralItem(molecule1, molecule1Type, molecule2, molecule2Type)
             query = None
             if (generalSearchItem != None): 
                 generalSearchItem.query(cursor)
-                print(generalSearchItem.getTuples())
+                return_dict = generalSearchItem.getTuples()
 
     except psycopg2.Error as err:
         print("DB Error: ", err)
@@ -58,3 +59,4 @@ def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
         print("Closing connection.")
         if (db):
             db.close()
+    return return_dict
