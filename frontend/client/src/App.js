@@ -1,27 +1,35 @@
 import logo from './logo.svg';
 import './App.css';
+import { Route, Switch, useHistory } from "react-router-dom";
+import InteractionPage from "./pages/InteractionPage";
+import MainPage from "./pages/MainPage";
 
 function App() {
 
+  const history = useHistory();
+
   return (
     <div className="App">
-      <button>
-        <h5> hi </h5>
+      <em>
+        <strong>
+          <h1> Bint </h1>
+        </strong>
+      </em>
+      <button onClick={() => history.push('/')}>
+        Home
       </button>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={() => history.push('/interactions')}>
+        Interaction
+      </button>
+      <Switch>
+        <Route exact path='/'>
+          <MainPage />
+        </Route>
+        <Route exact path='/interactions'>
+          <InteractionPage />
+        </Route>
+      </Switch>
+
     </div>
   );
 }
