@@ -25,13 +25,13 @@ CORS(APP)
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
-@APP.route("/interactions/search", methods=['POST'])
+@APP.route("/interactions", methods=['POST'])
 def interactions():
     # We want to receive the data from the caller.
     payload = request.get_json()
     print(payload)
     interaction_info = searchTwo(payload['molecule1'], payload['type1'], payload['molecule2'], payload['type2'])
-
+    print(interaction_info)
     return dumps(interaction_info)
 
 if __name__ == "__main__":

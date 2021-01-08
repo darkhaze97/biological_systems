@@ -1,8 +1,8 @@
-import logo from './logo.svg';
 import './App.css';
 import { Route, Switch, useHistory } from "react-router-dom";
 import InteractionPage from "./pages/InteractionPage";
 import MainPage from "./pages/MainPage";
+import ResultPage from "./pages/ResultPage";
 
 function App() {
 
@@ -21,13 +21,22 @@ function App() {
       <button onClick={() => history.push('/interactions')}>
         Interaction
       </button>
+      
       <Switch>
-        <Route exact path='/'>
-          <MainPage />
-        </Route>
-        <Route exact path='/interactions'>
-          <InteractionPage />
-        </Route>
+        <Route
+          exact
+          path='/'
+          component={MainPage}
+        />
+        <Route 
+          exact 
+          path='/interactions' 
+          component={InteractionPage}/>;
+        <Route 
+          exact 
+          path='/interactions/results'
+          component={ResultPage}/>;
+
       </Switch>
 
     </div>

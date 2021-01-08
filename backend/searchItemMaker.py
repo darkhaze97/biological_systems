@@ -28,15 +28,16 @@ class searchItem(ABC):
     def checkInteractions(self, ret_dict, tups, column_names):
         interaction_dict = {}
         for tup in tups:
-            molecule1 = tup[0] + "/" + tup[1] + "/" + str(tup[2])
-            molecule2 = tup[3] + "/" + tup[4] + "/" + str(tup[5])
+            print(tup)
+            molecule1 = tup[0] + "/" + tup[1]
+            molecule2 = tup[2] + "/" + tup[3]
             if (molecule1 not in interaction_dict.keys()):
                 #If we do not have the tuple as a key yet, add it, and make it point to a
                 #list (of dictionaries)
                 ret_dict[molecule1] = []
             interaction_dict[molecule2] = []
             #Scan through the return tuple list, only adding on if we have values for the tuples...
-            for i in range(6, len(tup)):
+            for i in range(4, len(tup)):
                 if (tup[i] == True):
                     interaction_dict[molecule2].append(column_names[i])
             ret_dict[molecule1].append(interaction_dict)
@@ -48,7 +49,7 @@ class uniqueMolecules(searchItem):
         self.tuples = cursor.fetchall()
         self.column_names = [desc[0] for desc in cursor.description]
         #Below is for the reverse direction: Nucleic Acid --> Protein
-        cursor.execute(self.queryString2, [self.molecule1, self.molecule2])
+        cursor.execute(self.queryString2, [self.molecule2, self.molecule1])
         self.tuples2 = cursor.fetchall()
         self.column_names2 = [desc[0] for desc in cursor.description]
 

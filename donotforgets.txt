@@ -1,0 +1,1 @@
+1. Do not forget to put in an extra 'info' column for all tables.
