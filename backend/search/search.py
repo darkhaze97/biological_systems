@@ -3,8 +3,8 @@
 import sys
 import psycopg2
 
-from specificSearch import makeSpecificItem
-from generalSearch import makeGeneralItem
+from .specificSearch import makeSpecificItem
+from .generalSearch import makeGeneralItem
 
 
 #The user passes in the inputs into the functions.

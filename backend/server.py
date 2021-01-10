@@ -6,7 +6,7 @@ from flask_cors import CORS
 import os
 from json import dumps
 
-from search import searchTwo
+from search.search import searchTwo
 
 def defaultHandler(err):
     response = err.get_response()

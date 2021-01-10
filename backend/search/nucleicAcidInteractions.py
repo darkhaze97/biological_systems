@@ -2,7 +2,7 @@
     This file helps model nucleic acid interaction with other molecules.
 """
 
-from searchItemMaker import uniqueMolecules, identicalMolecules
+from .searchItemMaker import uniqueMolecules, identicalMolecules
 
 class nucleicAcidNucleicAcid(identicalMolecules):
     def __init__(self, name1, name2):

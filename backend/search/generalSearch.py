@@ -9,8 +9,8 @@ import sys
 
 from abc import ABC, abstractmethod
 
-from proteinInteractions import *
-from nucleicAcidInteractions import *
+from .proteinInteractions import *
+from .nucleicAcidInteractions import *
 
 #Note that for the general search, I will be using many segments of the specific
 #search.

@@ -2,8 +2,8 @@
 
 -- Self defined types
 
-drop table if exists Binds_to;
-drop table if exists Protein_cleaves;
+drop table if exists Protein_Binds_to_Nucleic_Acid;
+drop table if exists Protein_cleaves_Nucleic_Acid;
 drop table if exists Nucleic_Acids;
 drop table if exists Proteins;
 drop table if exists Sequences;

@@ -3,7 +3,7 @@
     This file helps model protein interaction with other molecules.
 """
 
-from searchItemMaker import uniqueMolecules, identicalMolecules
+from .searchItemMaker import uniqueMolecules, identicalMolecules
 
 class proteinNucleicAcid(uniqueMolecules):
     """

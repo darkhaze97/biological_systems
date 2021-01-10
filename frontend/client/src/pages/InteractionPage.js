@@ -29,9 +29,9 @@ const InteractionPage = ({...props}) => {
     return (
         <div>
             <header>
-                <h1>
+                <h3>
                     Interactions between molecules
-                </h1>
+                </h3>
             </header>
             <form onSubmit={handleSubmit}>
                 <TextField 

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-from proteinInteractions import *
-from nucleicAcidInteractions import *
+from .proteinInteractions import *
+from .nucleicAcidInteractions import *
 
 def makeSpecificItem(name1, type1, name2, type2):
     """
