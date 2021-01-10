@@ -1,0 +1,10 @@
+select *
+from    Proteins
+where name = %s;
+===###===
+select *
+from    Proteins
+where name = %s;
+===###===
+select *
+from    getProteinProteinInteractionDetail(%s, %s)

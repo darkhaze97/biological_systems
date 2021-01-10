@@ -1,0 +1,10 @@
+select *
+from    Nucleic_Acids
+where name = %s;
+===###===
+select *
+from    Proteins
+where name = %s;
+===###===
+select *
+from    getNucleicAcidProteinInteractionDetail(%s, %s)

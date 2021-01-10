@@ -60,7 +60,7 @@ create table Protein_Binds_To_Nucleic_Acid (
 create table Protein_Cleaves_Nucleic_Acid (
     protein_name            text,
     nucleic_acid_name       text,
-    bases                   Nucleic_Acid_Types not null,
+    bases                   Bases not null,
     type                    text not null,
     primary key (protein_name, nucleic_acid_name),
     foreign key (protein_name) references Proteins(name),
