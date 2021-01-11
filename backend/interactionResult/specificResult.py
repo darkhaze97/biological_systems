@@ -2,8 +2,11 @@
 
 import sys
 import psycopg2
+import os
 
-from ..constants import USERSEPARATOR
+sys.path.insert(1, os.path.abspath(".."))
+
+from backend import USERSEPARATOR
 #USERSEPARATOR = "===###==="
 
 #This separator is used with the files in interactionResultQueries.

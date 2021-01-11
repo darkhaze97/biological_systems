@@ -1,5 +1,6 @@
 import React from "react";
-
+import axios from "axios";
+import { Button } from "@material-ui/core"
 
 const ResultPage = (props) => {
     const data = props.location.state.response
@@ -19,15 +20,47 @@ const ResultPage = (props) => {
         })
     }
 
+    const handleSubmit = (event, molecule1Info, molecule2Info) => {
+        event.preventDefault()
+        var molecule1InfoArray = molecule1Info.split("/")
+        const molecule1 = molecule1InfoArray[0]
+        const type1 = molecule1InfoArray[1]
+
+        var molecule2InfoArray = molecule2Info.split("/")
+        const molecule2 = molecule2InfoArray[0]
+        const type2 = molecule2InfoArray[1]
+
+        const values = {
+            molecule1: molecule1,
+            type1: type1,
+            molecule2: molecule2,
+            type2: type2
+        }
+
+        axios.post("http://127.0.0.1:8080/interactions/results/specific", {...values})
+            .then((response) => {
+                console.log(response)
+                props.history.push('/interactions/results/specific', {response: response.data})
+            })
+            .catch((err) => {})
+    }
+
     const deconstructData = (molecule1, interactions1) => {
         return (
             interactions1.map((value) => {
                 return (
                     Object.entries(value).map(([molecule2, interactions2]) => {
                         return (
-                            <h6>
-                                {molecule1} --> {interactions2} {molecule2}
-                            </h6>
+                            <div key={molecule1, molecule2}>
+                                <h6>
+                                    {molecule1} --{'>'} {interactions2} {molecule2}
+                                </h6>
+                                <Button onClick={(e) => {handleSubmit(e, molecule1, molecule2)}} type="submit" variant="contained" color="primary">
+                                    Select
+                                </Button>
+
+                            </div>
+
                         )
                     })  
                 )

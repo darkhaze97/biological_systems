@@ -18,10 +18,10 @@ const InteractionPage = ({...props}) => {
     const handleSubmit = (event) => {
         event.preventDefault()
 
-        axios.post("http://127.0.0.1:8080/interactions", {...values})
+        axios.post("http://127.0.0.1:8080/interactions/results/all", {...values})
             .then((response) => {
                 console.log(response)
-                props.history.push('/interactions/results', {response: response.data})
+                props.history.push('/interactions/results/all', {response: response.data})
             })
             .catch((err) => {})
     }

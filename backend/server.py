@@ -7,6 +7,7 @@ import os
 from json import dumps
 
 from search import searchTwo
+from interactionResult import getResult
 
 def defaultHandler(err):
     response = err.get_response()
@@ -25,7 +26,7 @@ CORS(APP)
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
-@APP.route("/interactions", methods=['POST'])
+@APP.route("/interactions/results/all", methods=['POST'])
 def interactions():
     # We want to receive the data from the caller.
     payload = request.get_json()
@@ -33,6 +34,15 @@ def interactions():
     interaction_info = searchTwo(payload['molecule1'], payload['type1'], payload['molecule2'], payload['type2'])
     print(interaction_info)
     return dumps(interaction_info)
+
+@APP.route("/interactions/results/specific", methods=['POST'])
+def specificInteraction():
+    payload = request.get_json()
+    print(payload)
+    print("ARGHHHHH")
+    specificInteractionInfo = getResult(payload['molecule1'], payload['type1'], payload['molecule2'], payload['type2'])
+    print(specificInteractionInfo)
+    return dumps(specificInteractionInfo)
 
 if __name__ == "__main__":
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))
