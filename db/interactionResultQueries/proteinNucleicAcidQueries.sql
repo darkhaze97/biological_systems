@@ -71,7 +71,7 @@ begin
     loop
         interaction.category = 'Protein binding';
         interaction.name = $1 || ' binds to ' || $2;
-        interaction.info = 'effect: ' || tup.effect || '===###===motif: ' || tup.motif;
+        interaction.info = 'effect: ' || tup.effect || getSeparator() || 'motif: ' || tup.motif;
         return next interaction;
     end loop;
 end
