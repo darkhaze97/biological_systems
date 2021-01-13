@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <em>
         <strong>
-          <h1> Bint </h1>
+          <h1 class="test"> Bint </h1>
         </strong>
       </em>
       <button onClick={() => history.push('/')}>

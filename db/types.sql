@@ -1,5 +1,5 @@
 --This file contains all the types that will be used across multiple sql files.
-drop type if exists interactionInfo;
+drop type if exists interactionInfo cascade;
 
 
 --=======================GENERAL===========================
@@ -10,8 +10,8 @@ create or replace function
     getSeparator() returns text
 as $$
 begin
-    return '===###==='
-end;
+    return '===###===';
+end
 $$ language plpgsql;
 
 --======================FOR SEARCH=========================

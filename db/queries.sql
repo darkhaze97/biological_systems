@@ -5,6 +5,8 @@
 -- i.e. there is directionality with this. I am not simply swapping the orientation of molecule1
 -- and molecule2
 
+--DIRECTIONALITY
+
 drop function if exists proteinNucleicAcid;
 drop function if exists specificProteinNucleicAcid;
 drop function if exists nucleicAcidProteinCodesFor;

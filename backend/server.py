@@ -39,7 +39,6 @@ def interactions():
 def specificInteraction():
     payload = request.get_json()
     print(payload)
-    print("ARGHHHHH")
     specificInteractionInfo = getResult(payload['molecule1'], payload['type1'], payload['molecule2'], payload['type2'])
     print(specificInteractionInfo)
     return dumps(specificInteractionInfo)

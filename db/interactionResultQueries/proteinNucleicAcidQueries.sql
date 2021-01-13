@@ -49,7 +49,7 @@ begin
     loop
         interaction.category = 'Coding';
         interaction.name = $2 || ' codes for ' || $1;
-        interaction.info = $2 || ' codes for ' || $1;
+        interaction.info = 'code: ' || $2 || ' codes for ' || $1;
         return next interaction;
     end loop;
 end

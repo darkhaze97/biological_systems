@@ -9,6 +9,9 @@ sys.path.insert(1, os.path.abspath(".."))
 from backend import USERSEPARATOR
 #USERSEPARATOR = "===###==="
 
+#This contains the path for the location of THIS file, instead of the server.
+cur_path = os.path.dirname(__file__)
+
 #This separator is used with the files in interactionResultQueries.
 #This should not be changed.
 PREDEFINED_SEPARATOR = "===###==="
@@ -32,7 +35,7 @@ def getResult(molecule1, type1, molecule2, type2):
         db = psycopg2.connect("dbname=biological_systems")
         cursor = db.cursor()
         #Then try to open the related file.
-        file = open("./queries/" + fileName)
+        file = open(cur_path + "/queries/" + fileName)
         queries = file.read()
         queryList = queries.split(PREDEFINED_SEPARATOR)
         
@@ -43,6 +46,8 @@ def getResult(molecule1, type1, molecule2, type2):
         #returnDict = {'molecule1': {'name': blah, 'bond_type': etc.}}
         for i in range(0, len(cursor.description)):
             returnDict['molecule1'][cursor.description[i][0]] = molecule1Info[i] 
+        #Include the type of the molecule.
+        returnDict['molecule1']['type'] = (type1.lower()).capitalize()
 
         cursor.execute(queryList[1], [molecule2])
         molecule2Info = cursor.fetchone()
@@ -50,6 +55,8 @@ def getResult(molecule1, type1, molecule2, type2):
         #Refer to the comment above for the for loop below.
         for i in range(0, len(cursor.description)):
             returnDict['molecule2'][cursor.description[i][0]] = molecule2Info[i]
+        #Include the type of the molecule/
+        returnDict['molecule2']['type'] = (type2.lower()).capitalize()
 
         cursor.execute(queryList[2], [molecule1, molecule2])
         interactionInfo = cursor.fetchall()
@@ -90,8 +97,8 @@ def getResult(molecule1, type1, molecule2, type2):
 
         #Return will look like: {molecule1: {info1: blah, info2: blah}, molecule2: {info1: blah, info2: blah},
         #                        interactions: {codes_for: {info1: blah, info2: blah}, binds_to: {info1: blah}}}
-    except IOError or psycopg2.Error:
-        print("Error")
+    except IOError or psycopg2.Error as err:
+        print(err)
     finally:
         if file:
             file.close()
