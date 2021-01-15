@@ -10,18 +10,21 @@ function App() {
   const history = useHistory();
 
   return (
-    <div className="App">
-      <em>
-        <strong>
-          <h1 class="test"> Bint </h1>
-        </strong>
-      </em>
-      <button onClick={() => history.push('/')}>
-        Home
-      </button>
-      <button onClick={() => history.push('/interactions')}>
-        Interaction
-      </button>
+    <div>
+      <div class="App">
+        <em>
+          <strong>
+            <h1 class="test"> Bint </h1>
+          </strong>
+        </em>
+        <button onClick={() => history.push('/')}>
+          Home
+        </button>
+        <button onClick={() => history.push('/interactions')}>
+          Interaction
+        </button>
+      </div>
+
       
       <Switch>
         <Route

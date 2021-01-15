@@ -27,7 +27,7 @@ const InteractionPage = ({...props}) => {
     }
 
     return (
-        <div>
+        <div class="App">
             <header>
                 <h3>
                     Interactions between molecules

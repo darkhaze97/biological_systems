@@ -16,7 +16,7 @@ const SpecificResultPage = (props) => {
                     return (
                         <div>
                             {infoColumn !== "name" && infoColumn !== "type" && 
-                            (<h2>{infoColumn}: {info}</h2>)}
+                            (<h4>{infoColumn}: {info}</h4>)}
                         </div>
                     )
                 })}
@@ -35,7 +35,7 @@ const SpecificResultPage = (props) => {
                     return (
                         <div>
                             {infoColumn !== "name" && infoColumn !== "type" && 
-                            (<h2>{infoColumn}: {info}</h2>)}
+                            (<h4>{infoColumn}: {info}</h4>)}
                         </div>
                     )
                 })}
@@ -66,16 +66,16 @@ const SpecificResultPage = (props) => {
                                     <div>
                                         {typeof attrInfo !== "object" ? 
                                             (
-                                                <h2>
+                                                <h4>
                                                     {attr}: {attrInfo}
-                                                </h2>
+                                                </h4>
                                             ) : (
                                                 <div>
                                                     {Object.entries(attrInfo).map(([attr2, attr2Info]) => {
                                                         return (
-                                                            <h2>
+                                                            <h4>
                                                                 {attr2}: {attr2Info}
-                                                            </h2>
+                                                            </h4>
                                                         )
                                                     })}
                                                 </div>
@@ -92,18 +92,22 @@ const SpecificResultPage = (props) => {
     }
 
     return (
-        <div>
-            <p>
-                {handleMolecule1()}
-            </p>
-            <p>
-                {handleMolecule2()}
-            </p>
-            <p>
-                {handleInteractions()}
+        <div class="component-padding">
+            <div class="rowC">
+                <p class="Interaction-border">
+                    {handleMolecule1()}
+                </p>
+                <p class="Interaction-border">
+                    {handleMolecule2()}
+                </p>
+            </div>
+            <p class="Interaction-border">
+                    {handleInteractions()}
             </p>
         </div>
     )
 };
 
 export default SpecificResultPage;
+
+

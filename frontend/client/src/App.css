@@ -41,3 +41,23 @@
   color: #61dafb;
   font-size: calc(10px + 2vmin);
 }
+
+.rowC {
+  display:flex; 
+  flex-direction:row;
+  padding: 10px;
+}
+
+.Interaction-border {
+  padding: 10px;
+  height: 500px;
+  border-radius: 25px;
+  border: 3px solid #73AD21;
+  text-align: center;
+  width:48%;
+  margin: auto;
+}
+
+.component-padding {
+  padding: 50px;
+}

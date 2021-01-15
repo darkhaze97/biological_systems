@@ -7,18 +7,17 @@ const ResultPage = (props) => {
     console.log("Here is the prop!")
     console.log(data)
 
-    //We need to scan through all the keys in the data... 
-    for (var key of Object.keys(data)) {
-        console.log(key + " -> " + data[key])
-        data[key].forEach(function (item, index) {
-            for (var key2 of Object.keys(item)) {
-                console.log(key2 + " -> " + item[key2])
-                item[key2].forEach(function (item2, index2) {
+    data.forEach(function (item, index) {
+        for (var key of Object.keys(item)) {
+            console.log(key + " -> " + item[key])
+            for (var key2 of Object.keys(item[key])) {
+                console.log(key2 + " -> " + item[key][key2])
+                item[key][key2].forEach(function (item2, index2) {
                     console.log(item2)
                 })
             }
-        })
-    }
+        }
+    })
 
     const handleSubmit = (event, molecule1Info, molecule2Info) => {
         event.preventDefault()
@@ -45,38 +44,51 @@ const ResultPage = (props) => {
             .catch((err) => {})
     }
 
-    const deconstructData = (molecule1, interactions1) => {
+    const deconstructData = () => {
+        
+        console.log("Hi")
         return (
-            interactions1.map((value) => {
+            data.map(function (item, index) {
+                return(
+                    Object.entries(item).map(([molecule1, molecule2]) => {
+                        return (
+                            <div>
+                                {molecule1}
+                            </div>
+                        )
+                    })
+                )
+            })
+
+         /*   data.forEach(function (item, index) {
+                return(
+                <div>
+                    Hi
+                </div> 
+                )
+            }*/
+        )
+            /*interactions1.map((value) => {
                 return (
                     Object.entries(value).map(([molecule2, interactions2]) => {
                         return (
                             <div key={molecule1, molecule2}>
-                                <h6>
-                                    {molecule1} --{'>'} {interactions2} {molecule2}
-                                </h6>
                                 <Button onClick={(e) => {handleSubmit(e, molecule1, molecule2)}} type="submit" variant="contained" color="primary">
-                                    Select
+                                    {molecule1} --{'>'} {interactions2} {molecule2}
                                 </Button>
-
                             </div>
 
                         )
                     })  
                 )
-            })
-        )
+            }) */
     }
 
     return (
-        <div>
+        <div class="App">
             <header>
                 <h3>
-                    {Object.entries(data).map(([molecule1, interactions1]) => {
-                        return (
-                            deconstructData(molecule1, interactions1)
-                        )
-                    })}
+                   {deconstructData()}
                 </h3>
             </header>
         </div>

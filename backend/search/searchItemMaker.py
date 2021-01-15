@@ -22,25 +22,48 @@ class searchItem(ABC):
         #I have structured it this way so that I can ensure directionality remains... E.g. nucleic acid CODES for protein,
         #not the other way around. This means that we have to have more queries to account for the reverse direction.
         ret_dict = {}
-        self.checkInteractions(ret_dict, self.tuples, self.column_names)
-        self.checkInteractions(ret_dict, self.tuples2, self.column_names2)
-        return ret_dict
-    def checkInteractions(self, ret_dict, tups, column_names):
-        interaction_dict = {}
+        ret_list = []
+        self.checkInteractions(ret_list, self.tuples, self.column_names)
+        self.checkInteractions(ret_list, self.tuples2, self.column_names2)
+        return ret_list
+    def checkInteractions(self, ret_list, tups, column_names):
         for tup in tups:
+            interaction_dict = {}
             print(tup)
             molecule1 = tup[0] + "/" + tup[1]
             molecule2 = tup[2] + "/" + tup[3]
+
             if (molecule1 not in interaction_dict.keys()):
                 #If we do not have the tuple as a key yet, add it, and make it point to a
                 #list (of dictionaries)
-                ret_dict[molecule1] = []
-            interaction_dict[molecule2] = []
+                interaction_dict[molecule1] = {}
+            interaction_dict[molecule1][molecule2] = []
             #Scan through the return tuple list, only adding on if we have values for the tuples...
             for i in range(4, len(tup)):
                 if (tup[i] == True):
-                    interaction_dict[molecule2].append(column_names[i])
-            ret_dict[molecule1].append(interaction_dict)
+                    interaction_dict[molecule1][molecule2].append(column_names[i])
+
+            #Check if molecule2 is already considered as a molecule1 before
+            added = False
+            for interactions in ret_list:
+                if (molecule2 in interactions.keys()):
+                    #Now, check if molecule1 is the second nested key of the key's value from above. 
+                    # [{DNA Polymerase: {DNA Polymerase III Gene (THIS KEY IS GRABBED IN THIS CASE): }}}]
+                    #Now, grab the inner dictionary.
+                    interactionDictInner = interactions.values()
+                    for interactions2 in interactionDictInner:
+                        if (molecule1 in interactions2.keys()):
+                            #If the above is true, then that means that the current value in tup considers the reverse
+                            #case of the interaction.
+                            interactions.update(interaction_dict)
+                            added = True
+                            break
+                    if (added):
+                        break
+            #If we could not find a dictionary that already contains molecule1 or 2, simply add
+            #it as a new entry to the list.
+            if (not added):
+                ret_list.append(interaction_dict)
 
 class uniqueMolecules(searchItem):
     def query(self, cursor):
