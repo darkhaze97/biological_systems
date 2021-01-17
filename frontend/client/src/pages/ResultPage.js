@@ -45,51 +45,39 @@ const ResultPage = (props) => {
     }
 
     const deconstructData = () => {
-        
-        console.log("Hi")
         return (
             data.map(function (item, index) {
                 return(
-                    Object.entries(item).map(([molecule1, molecule2]) => {
+                    Object.entries(item).map(([molecule1, innerItem]) => {
                         return (
-                            <div>
-                                {molecule1}
-                            </div>
+                            Object.entries(innerItem).map(([molecule2, interactionInfo]) => {
+                                return (
+                                    <div>
+                                        <Button onClick={(e) => handleSubmit(e, molecule1, molecule2)} variant="contained" color="primary">
+                                            {molecule1} --{">"} {deconstructArrayIntoString(interactionInfo)} {molecule2}
+                                        </Button>
+                                    </div>
+                                )
+                            }) 
                         )
                     })
                 )
             })
-
-         /*   data.forEach(function (item, index) {
-                return(
-                <div>
-                    Hi
-                </div> 
-                )
-            }*/
         )
-            /*interactions1.map((value) => {
-                return (
-                    Object.entries(value).map(([molecule2, interactions2]) => {
-                        return (
-                            <div key={molecule1, molecule2}>
-                                <Button onClick={(e) => {handleSubmit(e, molecule1, molecule2)}} type="submit" variant="contained" color="primary">
-                                    {molecule1} --{'>'} {interactions2} {molecule2}
-                                </Button>
-                            </div>
+    }
 
-                        )
-                    })  
-                )
-            }) */
+    const deconstructArrayIntoString = (array) => {
+        return (
+            array.map(function (item, index) {
+                return (item + " ")
+            })
+        )
     }
 
     return (
         <div class="App">
             <header>
-                <h3>
-                   {deconstructData()}
-                </h3>
+                {deconstructData()}
             </header>
         </div>
     )

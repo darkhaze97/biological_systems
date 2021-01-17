@@ -7,16 +7,16 @@
 
 --DIRECTIONALITY
 
-drop function if exists proteinNucleicAcid;
+drop function if exists protein_Nucleic_Acid;
 drop function if exists specificProteinNucleicAcid;
 drop function if exists nucleicAcidProteinCodesFor;
 drop function if exists proteinNucleicAcidProteinCleaves;
-drop function if exists nucleicAcidProtein;
+drop function if exists nucleic_Acid_Protein;
 drop function if exists specificNucleicAcidProtein;
 drop function if exists proteinNucleicAcidBindsTo;
-drop function if exists proteinProtein;
+drop function if exists protein_Protein;
 drop function if exists specificProteinProtein;
-drop function if exists nucleicAcidNucleicAcid;
+drop function if exists nucleic_Acid_Nucleic_Acid;
 drop function if exists specificNucleicAcidNucleicAcid;
 drop type if exists proteinNucleicAcidInteractions;
 drop type if exists nucleicAcidProteinInteractions;
@@ -38,10 +38,10 @@ create type proteinNucleicAcidInteractions as (
 
 --The function below returns all the interactions that the protein has with the nucleic acid.
 create or replace function
-    specificProteinNucleicAcid(name1 text, name2 text) returns setof proteinNucleicAcidInteractions
+    specificProteinNucleicAcid(name1 text, name2 text) returns setof nonSpecificInteractionInformation
 as $$
 declare
-    interactions proteinNucleicAcidInteractions;
+    interactions nonSpecificInteractionInformation;
 begin
 
     select 'PROTEIN' into interactions.molecule1type;
@@ -49,20 +49,28 @@ begin
 
     --Check if the protein cleaves the nucleic acid. We pass in the names of
     --the protein and nucleic acid.
-    interactions.protein_cleaves = proteinNucleicAcidProteinCleaves($1, $2);
+    if (proteinNucleicAcidProteinCleaves($1, $2)) then
+        interactions.interaction1 = 'protein_cleaves';
+    else
+        interactions.interaction1 = 'None';
+    end if;
 
     --Check if the protein binds to the nucleic acid.
-    interactions.binds_to = proteinNucleicAcidBindsTo($1, $2);
+    if (proteinNucleicAcidBindsTo($1, $2)) then
+        interactions.interaction2 = 'protein_binds_to';
+    else
+        interactions.interaction2 = 'None';
+    end if;
 
-    if (interactions.binds_to = true or interactions.protein_cleaves = true) then
+    if (interactions.interaction1 = 'protein_cleaves' or interactions.interaction2 = 'protein_binds_to') then
         -- Here, we want to associate the two molecules if there are any
         -- interactions between the molecules.
-        select name into interactions.protein
-        from    Proteins
-        where name = $1;
-        select name into interactions.nucleic_acid
-        from    Nucleic_Acids
-        where name = $2;
+        select name into interactions.molecule1name
+        from    Molecules
+        where name = $1 and type = 'Protein';
+        select name into interactions.molecule2name
+        from    Molecules
+        where name = $2 and type = 'Nucleic Acid';
         return next interactions;
     end if;
 end;
@@ -76,10 +84,12 @@ declare
     protein_cleaves_no integer := 0;
 begin
     select 1 into protein_cleaves_no
-    from    Proteins p
-            join Protein_Cleaves_Nucleic_Acid pc on (pc.protein_name = p.name)
-            join Nucleic_Acids na on (pc.nucleic_acid_name = na.name)
-    where p.name = $1 and na.name = $2;
+    from    Molecules m1
+            join Proteins p on (p.id = m1.id)
+            join Protein_Cleaves_Nucleic_Acid pc on (pc.protein_id = p.id)
+            join Nucleic_Acids na on (pc.nucleic_acid_id = na.id)
+            join Molecules m2 on (m2.id = na.id)
+    where m1.name = $1 and m2.name = $2;
     if (protein_cleaves_no > 0) then
         return true;
     end if;
@@ -95,10 +105,12 @@ declare
     binds_to_no integer := 0;
 begin
     select 1 into binds_to_no
-    from    Proteins p
-            join Protein_Binds_To_Nucleic_Acid bt on (bt.protein_name = p.name)
-            join Nucleic_Acids na on (bt.nucleic_acid_name = na.name)
-    where p.name = $1 and na.name = $2;
+    from    Molecules m1
+            join Proteins p on (p.id = m1.id)
+            join Protein_Binds_To_Nucleic_Acid bt on (bt.protein_id = p.id)
+            join Nucleic_Acids na on (bt.nucleic_acid_id = na.id)
+            join Molecules m2 on (m2.id = na.id)
+    where m1.name = $1 and m2.name = $2;
     if (binds_to_no > 0) then
         return true;
     end if;
@@ -120,26 +132,28 @@ create type nucleicAcidProteinInteractions as (
 --Note that some of the code is repeated for PROTEIN | NUCLEIC ACID, however, I cannot avoid them
 --as the types that I am returning are still different.
 create or replace function
-    specificNucleicAcidProtein(name1 text, name2 text) returns setof nucleicAcidProteinInteractions
+    specificNucleicAcidProtein(name1 text, name2 text) returns setof nonSpecificInteractionInformation
 as $$
 declare 
-    interactions nucleicAcidProteinInteractions;
+    interactions nonSpecificInteractionInformation;
 begin
     select 'NUCLEIC ACID' into interactions.molecule1type;
     select 'PROTEIN' into interactions.molecule2type;
 
     --Check if the nucleicAcid codes for the protein
-    interactions.codes_for = nucleicAcidProteinCodesFor($1, $2);
+    if (nucleicAcidProteinCodesFor($1, $2)) then
+        interactions.interaction1 = 'codes_for';
+    end if;
 
-    if (interactions.codes_for = true) then
+    if (interactions.interaction1 = 'codes_for') then
         -- Here, we want to associate the two molecules if there are any
         -- interactions between the molecules.
-        select name into interactions.protein
-        from    Proteins
-        where name = $2;
-        select name into interactions.nucleic_acid
-        from    Nucleic_Acids
-        where name = $1;
+        select name into interactions.molecule1name
+        from    Molecules
+        where name = $1 and type = 'Nucleic Acid';
+        select name into interactions.molecule2name
+        from    Molecules
+        where name = $2 and type = 'Protein';
         return next interactions;
     end if;
 end
@@ -153,9 +167,11 @@ declare
     codes_for_no integer := 0;
 begin
     select 1 into codes_for_no
-    from    Proteins p
-            join Nucleic_Acids na on (na.codes_for = p.name)
-    where p.name = $2 and na.name = $1;
+    from    Molecules m1
+            join Proteins p on (p.id = m1.id)
+            join Nucleic_Acids na on (na.codes_for = p.id)
+            join Molecules m2 on (m2.id = na.id)
+    where m1.name = $2 and m2.name = $1;
     if (codes_for_no > 0) then
         return true;
     end if;
@@ -174,21 +190,21 @@ create type proteinProteinInteractions as (
 );
 
 create or replace function
-    specificProteinProtein(name1 text, name2 text) returns setof proteinProteinInteractions
+    specificProteinProtein(name1 text, name2 text) returns setof nonSpecificInteractionInformation
 as $$
 declare
-    interactions proteinProteinInteractions;
+    interactions nonSpecificInteractionInformation;
 begin
     select 'PROTEIN' into interactions.molecule1type;
     select 'PROTEIN' into interactions.molecule2type;
     --Make any checks... Currently, I do not have any interactions between protein --> protein,
     --so I'll leave the if statement below as false
     if (false) then
-        select name into interactions.protein1
-        from    Proteins
+        select name into interactions.molecule1name
+        from    Molecules
         where name = $1;
-        select name into interactions.protein2
-        from    Proteins
+        select name into interactions.molecule2name
+        from    Molecules
         where name = $2;
         return next interactions;
     end if;
@@ -215,11 +231,11 @@ begin
     select 'NUCLEIC ACID' into interactions.molecule2type;
     --Same as the PROTEIN | PROTEIN case
     if (false) then
-        select name into interactions.nucleicAcid1
-        from    Nucleic_Acids
+        select name into interactions.molecule1name
+        from    Molecules
         where name = $1;
-        select name into interactions.nucleicAcid2
-        from    Nucleic_Acids
+        select name into interactions.molecule2name
+        from    Molecules
         where name = $2;
         return next interactions;
     end if;
@@ -232,23 +248,27 @@ $$ language plpgsql;
 --================================PROTEIN | NUCLEIC ACIDS========================================
 
 create or replace function
-    proteinNucleicAcid(name1 text, name2 text) returns setof proteinNucleicAcidInteractions
+    protein_Nucleic_Acid(name1 text, name2 text) returns setof nonSpecificInteractionInformation
 as $$
 declare
     names record;
 begin
     for names in
-        select distinct p.name as protein_name, na.name as nucleic_acid_name
-        from    Proteins p
-                join Protein_Binds_To_Nucleic_Acid bt on (bt.protein_name = p.name)
-                join Nucleic_Acids na on (bt.nucleic_acid_name = na.name)
-        where p.name like (name1 || '%') and na.name like (name2 || '%')
+        select distinct m1.name as protein_name, m2.name as nucleic_acid_name
+        from    Molecules m1
+                join Proteins p on (m1.id = p.id and m1.name = $1)
+                join Protein_Binds_To_Nucleic_Acid bt on (bt.protein_id = p.id)
+                join Nucleic_Acids na on (bt.nucleic_acid_id = na.id)
+                join Molecules m2 on (na.id = m2.id)
+        where m1.name like (name1 || '%') and m2.name like (name2 || '%')
         union
-        select distinct p.name as protein_name, na.name as nucleic_acid_name
-        from    Proteins p
-                join Protein_Cleaves_Nucleic_Acid cl on (cl.protein_name = p.name)
-                join Nucleic_Acids na on (cl.nucleic_acid_name = na.name)
-        where p.name like (name1 || '%') and na.name like (name2 || '%')
+        select distinct m1.name as protein_name, m2.name as nucleic_acid_name
+        from    Molecules m1
+                join Proteins p on (m1.id = p.id)
+                join Protein_Cleaves_Nucleic_Acid cl on (cl.protein_id = p.id)
+                join Nucleic_Acids na on (cl.nucleic_acid_id = na.id)
+                join Molecules m2 on (na.id = m2.id)
+        where m1.name like (name1 || '%') and m2.name like (name2 || '%')
     loop
         return next specificProteinNucleicAcid(names.protein_name, names.nucleic_acid_name);
     end loop;
@@ -259,22 +279,20 @@ $$ language plpgsql;
 --================================ NUCLEIC ACIDS | PROTEIN ===========================================
 
 create or replace function
-    nucleicAcidProtein(name1 text, name2 text) returns setof nucleicAcidProteinInteractions
+    nucleic_Acid_Protein(name1 text, name2 text) returns setof nonSpecificInteractionInformation
 as $$
 declare
     names record;
-    interaction nucleicAcidProteinInteractions;
 begin
     for names in
-        select na.name as nucleic_acid_name, p.name as protein_name
-        from    Nucleic_Acids na
-                join Proteins p on (p.name = na.codes_for)
-        where na.name like (name1 || '%') and p.name like (name2 || '%')
+        select m1.name as nucleic_acid_name, m2.name as protein_name
+        from    Molecules m1
+                join Nucleic_Acids na on (na.id = m1.id)
+                join Proteins p on (p.id = na.codes_for)
+                join Molecules m2 on (m2.id = p.id)
+        where m1.name like (name1 || '%') and m2.name like (name2 || '%')
     loop
-        interaction = specificNucleicAcidProtein(names.nucleic_acid_name, names.protein_name);
-        if (interaction is not null) then
-            return next interaction;
-        end if;
+        return next specificNucleicAcidProtein(names.nucleic_acid_name, names.protein_name);
     end loop;
 end;
 $$ language plpgsql;
@@ -282,7 +300,7 @@ $$ language plpgsql;
 --==============================PROTEIN | PROTEIN===================================
 
 create or replace function
-    proteinProtein(name1 text, name2 text) returns setof proteinProteinInteractions
+    protein_Protein(name1 text, name2 text) returns setof nonSpecificInteractionInformation
 as $$
 declare
 
@@ -294,7 +312,7 @@ $$ language plpgsql;
 --=========================NUCLEIC ACID | NUCLEIC ACID================================
 
 create or replace function
-    nucleicAcidNucleicAcid(name1 text, name2 text) returns setof nucleicAcidNucleicAcidInteractions
+    nucleic_Acid_Nucleic_Acid(name1 text, name2 text) returns setof nonSpecificInteractionInformation
 as $$
 declare
 
