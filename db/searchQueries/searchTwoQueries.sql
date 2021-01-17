@@ -17,22 +17,24 @@ declare
     queryString2 text := '';
     info record;
 begin
-
+    --The lines below form the dynamic query based on the type that the user passed in.
     queryString1 = '
                     select name, cast(type as text) as type
                         from    Molecules
-                    where name like (''' || $1 || '%'')
+                    where name ~* (''^' || $1 || ''')
                   ';
     queryString2 = '
                     select name, cast(type as text) as type
                         from    Molecules
-                    where name like (''' || $3 || '%'')
+                    where name ~* (''' || $3 || ''')
                    ';
-    if ($2 != 'Any') then
-        queryString1 = queryString1 || ' and cast(type as text) = ''' || $2 || '''';
+    --If the user specifies any, then we can search from any molecule type. Therefore, we would not
+    --need to care about the type of the molecule. I.e. we do not need to make sure that type ~* 'Protein', for example
+    if ($2 !~* '^Any') then
+        queryString1 = queryString1 || ' and cast(type as text) ~* ''^' || $2 || '''';
     end if;
-    if ($4 != 'Any') then
-        queryString2 = queryString2 || ' and cast(type as text) = ''' || $4 || '''';
+    if ($4 !~* '^Any') then
+        queryString2 = queryString2 || ' and cast(type as text) ~* ''^' || $4 || '''';
     end if;
 
     for molecule1 in
@@ -41,7 +43,6 @@ begin
         for molecule2 in
             execute queryString2
         loop
-            raise notice 'Hi';
             select replace(molecule2.type, ' ', '_') into molecule2.type;
             select replace(molecule1.type, ' ', '_') into molecule1.type;
             for info in
