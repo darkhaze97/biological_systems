@@ -1,3 +1,4 @@
 1. Considered bi-directionality of the relationships. I had to consider Protein --> Nucleic acid and nucleic acid --> protein interactions.
 2. Made sure that we had an O(n) search instead of O(n^2) in the database queries.sql... Cancelled --> I wanted to ensure extensibility.
+    --> Now, if I add new molecules, I only ever need to change the database functions and schema. I never need to change the backend searches anymore.
 3. I am reading in queries from files instead of using if statements to improve extensibility.

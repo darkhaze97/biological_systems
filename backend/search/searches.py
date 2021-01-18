@@ -21,6 +21,8 @@ def searchOne(molecule1, molecule1Type):
             db.close()
 
 def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
+    #First, change the molecule types into capitalised form, e.g. "Hi", "Police", etc.
+    
     db = None
     return_dict = {}
     ret_list = []

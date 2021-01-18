@@ -19,12 +19,12 @@ declare
 begin
     --The lines below form the dynamic query based on the type that the user passed in.
     queryString1 = '
-                    select name, cast(type as text) as type
+                    select id, cast(type as text) as type
                         from    Molecules
                     where name ~* (''^' || $1 || ''')
                   ';
     queryString2 = '
-                    select name, cast(type as text) as type
+                    select id, cast(type as text) as type
                         from    Molecules
                     where name ~* (''' || $3 || ''')
                    ';
@@ -46,13 +46,13 @@ begin
             select replace(molecule2.type, ' ', '_') into molecule2.type;
             select replace(molecule1.type, ' ', '_') into molecule1.type;
             for info in
-                execute 'select * from ' || molecule1.type || '_' || molecule2.type || '(''' || molecule1.name || ''', ''' || molecule2.name || ''')'
+                execute 'select * from ' || molecule1.type || '_' || molecule2.type || '(''' || molecule1.id || ''', ''' || molecule2.id || ''')'
             loop
                 return next info;
             end loop;
             --below is the reverse case
             for info in
-                execute 'select * from ' || molecule2.type || '_' || molecule1.type || '(''' || molecule2.name || ''', ''' || molecule1.name || ''')'
+                execute 'select * from ' || molecule2.type || '_' || molecule1.type || '(''' || molecule2.id || ''', ''' || molecule1.id || ''')'
             loop
                 return next info;
             end loop;

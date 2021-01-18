@@ -15,7 +15,7 @@ const SpecificResultPage = (props) => {
                 {Object.entries(molecule1).map(([infoColumn, info]) => {
                     return (
                         <div>
-                            {infoColumn !== "name" && infoColumn !== "type" && 
+                            {infoColumn !== "name" && infoColumn !== "type" && infoColumn !== "id" &&
                             (<h4>{infoColumn}: {info}</h4>)}
                         </div>
                     )
@@ -34,7 +34,7 @@ const SpecificResultPage = (props) => {
                 {Object.entries(molecule2).map(([infoColumn, info]) => {
                     return (
                         <div>
-                            {infoColumn !== "name" && infoColumn !== "type" && 
+                            {infoColumn !== "name" && infoColumn !== "type" && infoColumn !== "id" &&
                             (<h4>{infoColumn}: {info}</h4>)}
                         </div>
                     )

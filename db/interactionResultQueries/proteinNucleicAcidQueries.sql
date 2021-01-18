@@ -43,9 +43,11 @@ declare
 begin
     for tup in
         select *
-            from    Proteins p
-                    join Nucleic_Acids na on (na.codes_for = p.name)
-        where p.name = $1 and na.name = $2
+            from    Molecules m1
+                    join Proteins p on (m1.id = p.id)
+                    join Nucleic_Acids na on (na.codes_for = p.id)
+                    join Molecules m2 on (m2.id = na.id)
+        where m1.name = $1 and m2.name = $2
     loop
         interaction.category = 'Coding';
         interaction.name = $2 || ' codes for ' || $1;
@@ -64,10 +66,12 @@ declare
 begin
     for tup in
         select bt.effect, bt.motif
-            from    Proteins p
-                    join Protein_Binds_To_Nucleic_Acid bt on (bt.protein_name = p.name)
-                    join Nucleic_Acids na on (bt.nucleic_acid_name = na.name)
-        where p.name = $1 and na.name = $2
+            from    Molecules m1
+                    join Proteins p on (m1.id = p.id) 
+                    join Protein_Binds_To_Nucleic_Acid bt on (bt.protein_id = p.id)
+                    join Nucleic_Acids na on (bt.nucleic_acid_id = na.id)
+                    join Molecules m2 on (m2.id = na.id)
+        where m1.name = $1 and m2.name = $2
     loop
         interaction.category = 'Protein binding';
         interaction.name = $1 || ' binds to ' || $2;
@@ -86,10 +90,12 @@ declare
 begin
     for tup in
         select cl.bases, cl.type
-            from    Proteins p
-                    join Protein_Cleaves_Nucleic_Acid cl on (cl.protein_name = p.name)
-                    join Nucleic_Acids na on (cl.nucleic_acid_name = na.name)
-        where p.name = $1 and na.name = $2
+            from    Molecules m1
+                    join Proteins p on (p.id = m1.id)
+                    join Protein_Cleaves_Nucleic_Acid cl on (cl.protein_id = p.id)
+                    join Nucleic_Acids na on (cl.nucleic_acid_id = na.id)
+                    join Molecules m2 on (m2.id = na.id)
+        where m1.name = $1 and m2.name = $2
     loop
         interaction.category = 'Protein cleaving';
         interaction.name = $1 || ' cleaves ' || $2;

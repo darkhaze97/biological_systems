@@ -16,6 +16,7 @@ cur_path = os.path.dirname(__file__)
 #This should not be changed.
 PREDEFINED_SEPARATOR = "===###==="
 
+#Precond: Type1 and type2 are exactly one of the strings defined in molecules.sql, in the type Molecule_Types
 def getResult(molecule1, type1, molecule2, type2):
     #Depending on the type, I will need to perform different searches...
     #I will dynamically get the query...
@@ -34,12 +35,26 @@ def getResult(molecule1, type1, molecule2, type2):
         #First, connect to the db
         db = psycopg2.connect("dbname=biological_systems")
         cursor = db.cursor()
-        #Then try to open the related file.
-        file = open(cur_path + "/queries/" + fileName)
-        queries = file.read()
-        queryList = queries.split(PREDEFINED_SEPARATOR)
-        
-        cursor.execute(queryList[0], [molecule1])
+
+        #Below grabs the specific table for molecule 1.
+        moleculeTableName1 = "_".join(type1.split(" ")) + "s"
+        #Below grabs the specific table for molecule 2.
+        moleculeTableName2 = "_".join(type2.split(" ")) + "s"
+
+        queryString1 =   f"""
+                            select *
+                            from    Molecules m
+                                    join {moleculeTableName1} specm on (m.id = specm.id)
+                            where m.name = %s and m.type = %s
+                        """
+        queryString2 =  f"""
+                            select *
+                            from    Molecules m
+                                    join {moleculeTableName2} specm on (m.id = specm.id)
+                            where m.name = %s and m.type = %s
+                        """
+        #Grab information about molecule 1.
+        cursor.execute(queryString1, [molecule1, type1])
         molecule1Info = cursor.fetchone()
         returnDict['molecule1'] = {}
         #The for loop below simply adds the information of molecule1 to the returnDictionary:
@@ -49,7 +64,8 @@ def getResult(molecule1, type1, molecule2, type2):
         #Include the type of the molecule.
         returnDict['molecule1']['type'] = (type1.lower()).capitalize()
 
-        cursor.execute(queryList[1], [molecule2])
+        #Grab information about molecule 2.
+        cursor.execute(queryString2, [molecule2, type2])
         molecule2Info = cursor.fetchone()
         returnDict['molecule2'] = {}
         #Refer to the comment above for the for loop below.
@@ -58,7 +74,9 @@ def getResult(molecule1, type1, molecule2, type2):
         #Include the type of the molecule/
         returnDict['molecule2']['type'] = (type2.lower()).capitalize()
 
-        cursor.execute(queryList[2], [molecule1, molecule2])
+        query3 = "select * from    get" + "".join(type1.split(" ")) + "".join(type2.split(" ")) + "interactiondetail(%s, %s)"
+
+        cursor.execute(query3, [molecule1, molecule2])
         interactionInfo = cursor.fetchall()
         #interactionInfo currently contains all the tuples: [(category, name, info)]
         #category is simply the category of the interaction: codes for, binds to, etc.
