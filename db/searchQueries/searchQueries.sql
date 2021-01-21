@@ -8,7 +8,7 @@
 --DIRECTIONALITY
 
 create or replace function
-    searchTwoMolecules(name1 text, type1 text, name2 text, type2 text) returns setof nonSpecificInteractionInformation
+    searchMolecules(name1 text, type1 text, name2 text, type2 text) returns setof nonSpecificInteractionInformation
 as $$
 declare
     molecule1 record;
@@ -19,14 +19,14 @@ declare
 begin
     --The lines below form the dynamic query based on the type that the user passed in.
     queryString1 = '
-                    select id, cast(type as text) as type
+                    select id, replace(cast(type as text), '' '', ''_'') as type
                         from    Molecules
                     where name ~* (''^' || $1 || ''')
                   ';
     queryString2 = '
-                    select id, cast(type as text) as type
+                    select id, replace(cast(type as text), '' '', ''_'') as type
                         from    Molecules
-                    where name ~* (''' || $3 || ''')
+                    where name ~* (''^' || $3 || ''')
                    ';
     --If the user specifies any, then we can search from any molecule type. Therefore, we would not
     --need to care about the type of the molecule. I.e. we do not need to make sure that type ~* 'Protein', for example
@@ -43,8 +43,6 @@ begin
         for molecule2 in
             execute queryString2
         loop
-            select replace(molecule2.type, ' ', '_') into molecule2.type;
-            select replace(molecule1.type, ' ', '_') into molecule1.type;
             for info in
                 execute 'select * from ' || molecule1.type || '_' || molecule2.type || '(''' || molecule1.id || ''', ''' || molecule2.id || ''')'
             loop

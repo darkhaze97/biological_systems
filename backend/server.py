@@ -6,7 +6,7 @@ from flask_cors import CORS
 import os
 from json import dumps
 
-from search import searchTwo
+from search import search
 from interactionResult import getResult
 
 def defaultHandler(err):
@@ -31,7 +31,7 @@ def interactions():
     # We want to receive the data from the caller.
     payload = request.get_json()
     print(payload)
-    interaction_info = searchTwo(payload['molecule1'], payload['type1'], payload['molecule2'], payload['type2'])
+    interaction_info = search(payload['molecule1'], payload['type1'], payload['molecule2'], payload['type2'])
     print(interaction_info)
     return dumps(interaction_info)
 

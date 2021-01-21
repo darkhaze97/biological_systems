@@ -8,21 +8,10 @@ from .searchHelper import handleInteractions
 
 #The user passes in the inputs into the functions.
 
-def searchOne(molecule1, molecule1Type):
-    db = None
-    try:
-        db = psycopg2.connect("dbname=biological_systems")
-        cursor = db.cursor()
-    except psycopg2.Error as err:
-        print("DB Error: ", err)
-    finally:
-        print("Ending.")
-        if (db):
-            db.close()
+def search(molecule1, molecule1Type, molecule2, molecule2Type):
+    #This accounts for whether the user has entered any input at all for both molecules. If no input for any of the molecules,
+    #then it is assumed that the user is referring to an interaction between ALL molecules 
 
-def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
-    #First, change the molecule types into capitalised form, e.g. "Hi", "Police", etc.
-    
     db = None
     return_dict = {}
     ret_list = []
@@ -43,7 +32,7 @@ def searchTwo(molecule1, molecule1Type, molecule2, molecule2Type):
         #in plpgsql --> check specificSearch makeSpecificItem, because I can also put in the general case there, and then
         #make a general case object
 
-        cursor.execute("select * from searchTwoMolecules(%s, %s, %s, %s)", [molecule1, molecule1Type, molecule2, molecule2Type])
+        cursor.execute("select * from searchMolecules(%s, %s, %s, %s)", [molecule1, molecule1Type, molecule2, molecule2Type])
         ret_list = handleInteractions(cursor.fetchall())
 
         

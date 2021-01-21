@@ -1,1 +1,1 @@
-from .searches import searchTwo, searchOne
+from .searches import search
