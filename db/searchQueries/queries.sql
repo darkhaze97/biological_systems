@@ -196,6 +196,20 @@ begin
 end
 $$ language plpgsql;
 
+--==================================LIPID | PROTEIN==========================================
+
+create or replace function
+    specificLipidProtein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+as $$
+declare
+    interactions nonSpecificInteractionInformation;
+begin
+    select 'Lipid' into interactions.molecule1type;
+    select 'Protein' into interactions.molecule2type;
+
+    
+end
+$$ language plpgsql;
 
 --=================================CHANGE WHEN ADDING NEW TABLES======================================
 
@@ -266,5 +280,24 @@ declare
 
 begin
     
+end
+$$ language plpgsql;
+
+--==========================LIPID | PROTEIN========================================
+
+create or replace function
+    lipid_Protein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+as $$
+declare
+    names record;
+begin
+    for names in
+        select l.id as lipid_id, p.id as protein_id
+        from    Lipids l
+                join Protein_Synthesises_Lipid psl on (psl.lipid_id = l.id)
+                join Proteins p on (psl.protein_id = p.id)
+    loop
+        return next specificLipidProtein(names.lipid_id, names.protein_id);
+    end loop;
 end
 $$ language plpgsql;

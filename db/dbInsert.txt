@@ -1,0 +1,10 @@
+insert into Molecules values (0, 'DNA Polymerase III', 'Protein');
+insert into Molecules values (1, 'DNA Polymerase III Gene', 'Nucleic Acid');
+insert into Molecules values (2, 'Palmitate', 'Lipid');
+insert into Molecules values (3, 'Fatty Acid Synthase', 'Protein');
+insert into Sequences values ('AAA', 3);
+insert into Proteins values (0, 'N/A', 'Eukaryotes', 'N/A', 'N/A', 'N/A', 'N/A', 'AAA');
+insert into Nucleic_Acids values (1, 'AUG', 'Eukaryotes', 'DNA', 'N/A', 0);
+insert into Lipids values (2, 'Saturated', 'N/A', 'Fatty acid chain');
+insert into Proteins values (3, 'N/A', 'Eukaryotes', 'N/A', 'N/A', 'N/A', 'N/A', 'AAA');
+insert into Protein_Synthesises_Lipid values (3, 2, 'Fatty Acid Synthase produces Palmitate after 7 cycles with Acetyl CoA as an input.');
