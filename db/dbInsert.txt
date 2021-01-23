@@ -5,6 +5,7 @@ insert into Molecules values (3, 'Fatty Acid Synthase', 'Protein');
 insert into Sequences values ('AAA', 3);
 insert into Proteins values (0, 'N/A', 'Eukaryotes', 'N/A', 'N/A', 'N/A', 'N/A', 'AAA');
 insert into Nucleic_Acids values (1, 'AUG', 'Eukaryotes', 'DNA', 'N/A', 0);
+insert into Protein_Cleaves_Nucleic_Acid values (0, 1, 'AAA', 'Cleaver!!!', 'Notin much');
 insert into Lipids values (2, 'Saturated', 'N/A', 'Fatty acid chain');
 insert into Proteins values (3, 'N/A', 'Eukaryotes', 'N/A', 'N/A', 'N/A', 'N/A', 'AAA');
 insert into Protein_Synthesises_Lipid values (3, 2, 'Fatty Acid Synthase produces Palmitate after 7 cycles with Acetyl CoA as an input.');

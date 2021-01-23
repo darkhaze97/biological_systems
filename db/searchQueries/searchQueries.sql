@@ -17,6 +17,7 @@ declare
     queryString2 text := '';
     info record;
 begin
+    raise notice 'Nooooo';
     --The lines below form the dynamic query based on the type that the user passed in.
     queryString1 = '
                     select id, replace(cast(type as text), '' '', ''_'') as type
@@ -43,6 +44,7 @@ begin
         for molecule2 in
             execute queryString2
         loop
+            raise notice 'hi';
             for info in
                 execute 'select * from ' || molecule1.type || '_' || molecule2.type || '(''' || molecule1.id || ''', ''' || molecule2.id || ''')'
             loop

@@ -8,22 +8,27 @@
 --DIRECTIONALITY
 
 drop function if exists protein_Nucleic_Acid;
-drop function if exists specificProteinNucleicAcid;
+
 drop function if exists nucleicAcidProteinCodesFor;
 drop function if exists proteinNucleicAcidProteinCleaves;
 drop function if exists nucleic_Acid_Protein;
-drop function if exists specificNucleicAcidProtein;
+
 drop function if exists proteinNucleicAcidBindsTo;
 drop function if exists protein_Protein;
-drop function if exists specificProteinProtein;
+
 drop function if exists nucleic_Acid_Nucleic_Acid;
-drop function if exists specificNucleicAcidNucleicAcid;
+
+drop function if exists lipid_Protein;
+
+drop function if exists protein_Lipid;
+drop function if exists proteinLipidSynthesises;
+
 
 --====================================PROTEIN | NUCLEIC ACID===============================================
 
 --The function below returns all the interactions that the protein has with the nucleic acid.
 create or replace function
-    specificProteinNucleicAcid(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+    protein_Nucleic_Acid(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
 as $$
 declare
     interactions nonSpecificInteractionInformation;
@@ -104,7 +109,7 @@ $$ language plpgsql;
 --Note that some of the code is repeated for PROTEIN | NUCLEIC ACID, however, I cannot avoid them
 --as the types that I am returning are still different.
 create or replace function
-    specificNucleicAcidProtein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+    nucleic_Acid_Protein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
 as $$
 declare 
     interactions nonSpecificInteractionInformation;
@@ -152,7 +157,7 @@ $$ language plpgsql;
 --====================================PROTEIN | PROTEIN==========================================
 
 create or replace function
-    specificProteinProtein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+    protein_Protein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
 as $$
 declare
     interactions nonSpecificInteractionInformation;
@@ -176,7 +181,7 @@ $$ language plpgsql;
 --================================NUCLEIC ACID | NUCLEIC ACID========================================
 
 create or replace function
-    specificNucleicAcidNucleicAcid(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+    nucleic_Acid_Nucleic_Acid(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
 as $$
 declare
     interactions nonSpecificInteractionInformation;
@@ -199,105 +204,66 @@ $$ language plpgsql;
 --==================================LIPID | PROTEIN==========================================
 
 create or replace function
-    specificLipidProtein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+    lipid_Protein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
 as $$
 declare
     interactions nonSpecificInteractionInformation;
 begin
     select 'Lipid' into interactions.molecule1type;
     select 'Protein' into interactions.molecule2type;
+    
+    if (false) then
 
+    end if;
+end
+$$ language plpgsql;
+
+
+--==================================PROTEIN | LIPID=============================================
+
+create or replace function
+    protein_Lipid(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+as $$
+declare
+    interactions nonSpecificInteractionInformation;
+begin
+    select 'Protein' into interactions.molecule1type;
+    select 'Lipid' into interactions.molecule2type;
+
+    if (proteinLipidSynthesises($1, $2)) then
+        interactions.interaction1 = 'synthesises';
+    else
+        interactions.interaction1 = 'None';
+    end if;
+
+    if (interactions.interaction1 = 'synthesises') then
+        select name into interactions.molecule1name
+            from    Molecules
+        where id = $1;
+        select name into interactions.molecule2name
+            from Molecules
+        where id = $2;
+        return next interactions;
+    end if;
     
 end
 $$ language plpgsql;
 
---=================================CHANGE WHEN ADDING NEW TABLES======================================
-
---================================PROTEIN | NUCLEIC ACIDS========================================
-
+--The function below returns true if the nucleic acid codes for the protein.
 create or replace function
-    protein_Nucleic_Acid(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
+    proteinLipidSynthesises(id1 integer, id2 integer) returns boolean
 as $$
 declare
-    names record;
+    synthesises_no integer := 0;
 begin
-    for names in
-        select distinct p.id as protein_id, na.id as nucleic_acid_id
-        from    Proteins p
-                join Protein_Binds_To_Nucleic_Acid bt on (bt.protein_id = p.id)
-                join Nucleic_Acids na on (bt.nucleic_acid_id = na.id)
-        where p.id = $1 and na.id = $2
-        union
-        select distinct p.id as protein_id, na.id as nucleic_acid_id
-        from    Proteins p
-                join Protein_Cleaves_Nucleic_Acid cl on (cl.protein_id = p.id)
-                join Nucleic_Acids na on (cl.nucleic_acid_id = na.id)
-        where p.id = $1 and na.id = $2
-    loop
-        return next specificProteinNucleicAcid(names.protein_id, names.nucleic_acid_id);
-    end loop;
-
+    select 1 into synthesises_no
+    from    Proteins p
+            join Protein_Synthesises_Lipid psl on (psl.protein_id = p.id)
+            join Lipids l on (psl.lipid_id = l.id)
+    where p.id = $1 and l.id = $2;
+    if (synthesises_no > 0) then
+        return true;
+    end if;
+    return false;
 end;
-$$ language plpgsql;
-
---================================ NUCLEIC ACIDS | PROTEIN ===========================================
-
-create or replace function
-    nucleic_Acid_Protein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
-as $$
-declare
-    names record;
-begin
-    for names in
-        select na.id as nucleic_acid_id, p.id as protein_id
-        from    Nucleic_Acids na 
-                join Proteins p on (p.id = na.codes_for)
-        where na.id = $1 and p.id = $2
-    loop
-        return next specificNucleicAcidProtein(names.nucleic_acid_id, names.protein_id);
-    end loop;
-end;
-$$ language plpgsql;
-
---==============================PROTEIN | PROTEIN===================================
-
-create or replace function
-    protein_Protein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
-as $$
-declare
-
-begin
-    
-end
-$$ language plpgsql;
-
---=========================NUCLEIC ACID | NUCLEIC ACID================================
-
-create or replace function
-    nucleic_Acid_Nucleic_Acid(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
-as $$
-declare
-
-begin
-    
-end
-$$ language plpgsql;
-
---==========================LIPID | PROTEIN========================================
-
-create or replace function
-    lipid_Protein(id1 integer, id2 integer) returns setof nonSpecificInteractionInformation
-as $$
-declare
-    names record;
-begin
-    for names in
-        select l.id as lipid_id, p.id as protein_id
-        from    Lipids l
-                join Protein_Synthesises_Lipid psl on (psl.lipid_id = l.id)
-                join Proteins p on (psl.protein_id = p.id)
-    loop
-        return next specificLipidProtein(names.lipid_id, names.protein_id);
-    end loop;
-end
 $$ language plpgsql;
