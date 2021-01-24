@@ -25,11 +25,12 @@ create type interactionInfo as (
 create type nonSpecificInteractionInformation as (
     molecule1name       text,
     molecule1type       text,
+    molecule1id         integer,
     molecule2name       text,
     molecule2type       text,
-    interaction1        text,
-    interaction2        text,
-    interaction3        text
+    molecule2id         integer,
+    interaction_info    text
+
     --More can be added depending on max(interactions molecules can have with each other)
     --This will not affect our database schema. It will only affect the functions in the database.
 );

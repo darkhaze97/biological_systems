@@ -2,3 +2,5 @@
 2. Made sure that we had an O(n) search instead of O(n^2) in the database queries.sql... Cancelled --> I wanted to ensure extensibility.
     --> Now, if I add new molecules, I only ever need to change the database functions and schema. I never need to change the backend searches anymore.
 3. I am reading in queries from files instead of using if statements to improve extensibility.
+4. I cannot ensure the constraints are met for the interactions table, e.g. for bases, we only have AGUCT. This can be done in the backend when I am inserting
+   a molecule.

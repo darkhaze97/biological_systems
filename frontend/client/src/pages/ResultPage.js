@@ -22,17 +22,19 @@ const ResultPage = (props) => {
     const handleSubmit = (event, molecule1Info, molecule2Info) => {
         event.preventDefault()
         var molecule1InfoArray = molecule1Info.split("/")
-        const molecule1 = molecule1InfoArray[0]
-        const type1 = molecule1InfoArray[1]
+        const id1 = molecule1InfoArray[0]
+        const molecule1 = molecule1InfoArray[1]
+        const type1 = molecule1InfoArray[2]
 
         var molecule2InfoArray = molecule2Info.split("/")
-        const molecule2 = molecule2InfoArray[0]
-        const type2 = molecule2InfoArray[1]
+        const id2 = molecule2InfoArray[0]
+        const molecule2 = molecule2InfoArray[1]
+        const type2 = molecule2InfoArray[2]
 
         const values = {
-            molecule1: molecule1,
+            id1: Number(id1),
             type1: type1,
-            molecule2: molecule2,
+            id2: Number(id2),
             type2: type2
         }
 

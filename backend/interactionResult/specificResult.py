@@ -17,7 +17,7 @@ cur_path = os.path.dirname(__file__)
 PREDEFINED_SEPARATOR = "===###==="
 
 #Precond: Type1 and type2 are exactly one of the strings defined in molecules.sql, in the type Molecule_Types
-def getResult(molecule1, type1, molecule2, type2):
+def getResult(id1, type1, id2, type2):
     #Depending on the type, I will need to perform different searches...
     #I will dynamically get the query...
     
@@ -45,16 +45,16 @@ def getResult(molecule1, type1, molecule2, type2):
                             select *
                             from    Molecules m
                                     join {moleculeTableName1} specm on (m.id = specm.id)
-                            where m.name = %s and m.type = %s
+                            where m.id = %s and m.type = %s
                         """
         queryString2 =  f"""
                             select *
                             from    Molecules m
                                     join {moleculeTableName2} specm on (m.id = specm.id)
-                            where m.name = %s and m.type = %s
+                            where m.id = %s and m.type = %s
                         """
         #Grab information about molecule 1.
-        cursor.execute(queryString1, [molecule1, type1])
+        cursor.execute(queryString1, [id1, type1])
         molecule1Info = cursor.fetchone()
         returnDict['molecule1'] = {}
         #The for loop below simply adds the information of molecule1 to the returnDictionary:
@@ -65,7 +65,7 @@ def getResult(molecule1, type1, molecule2, type2):
         returnDict['molecule1']['type'] = (type1.lower()).capitalize()
 
         #Grab information about molecule 2.
-        cursor.execute(queryString2, [molecule2, type2])
+        cursor.execute(queryString2, [id2, type2])
         molecule2Info = cursor.fetchone()
         returnDict['molecule2'] = {}
         #Refer to the comment above for the for loop below.

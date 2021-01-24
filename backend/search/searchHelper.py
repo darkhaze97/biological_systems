@@ -4,21 +4,33 @@
 def handleInteractions(tups):
     ret_list = []
     for tup in tups:
-        interaction_dict = {}
-        molecule1 = tup[0] + "/" + tup[1]
-        molecule2 = tup[2] + "/" + tup[3]
+        #Form the name for the keys of the dictionaries first.
+        molecule1 = str(tup[2]) + "/" + tup[0] + "/" + tup[1]
+        molecule2 = str(tup[5]) + "/" + tup[3] + "/" + tup[4]
 
-        interaction_dict[molecule1] = {}
-        interaction_dict[molecule1][molecule2] = []
+        #Below is to find if there is already information logged for molecule1-->molecule2 interactions.
+        added = False
+        for interactions in ret_list:
+            if (molecule1 in interactions.keys()):
+                if (molecule2 in interactions.get(molecule1)):
+                    #If we reach here, then there was already information about molecule1-->molecule2
+                    #Add the extra info on.
+                    interactions.get(molecule1).get(molecule2).append(tup[6])
+                    added = True
+                    break
+        if (added):
+            continue
+        else:
+            #If we have no information logged for molecule1-->molecule2, then we make a new record for it.
+            interaction_dict = {}
+            interaction_dict[molecule1] = {}
+            interaction_dict[molecule1][molecule2] = []
+            #tup[4] contains the information about the interaction.
+            interaction_dict[molecule1][molecule2].append(tup[6])   
+            #Interaction_dict is now fully formed. Now we need to decide how to insert this in the ret_list.
 
-        for i in range(4, len(tup)):
-            if (tup[i] == None):
-                break;
-            interaction_dict[molecule1][molecule2].append(tup[i])
-        
-        #Interaction_dict is now fully formed. Now we need to decide how to insert this in the ret_list.
-
-        #Check if molecule2 has already been considered in place of a molecule1 before.
+        #Check if molecule2 has already been considered in place of a molecule1 before. This is so that we can associate
+        #the interactions between molecule1-->molecule2 and molecule2-->molecule1
         added = False
         for interactions in ret_list:
             if (molecule2 in interactions.keys()):

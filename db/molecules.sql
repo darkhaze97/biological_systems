@@ -13,6 +13,7 @@ drop table if exists Sequences;
 drop table if exists Lipids;
 drop table if exists Hormones;
 drop table if exists Carbohydrates;
+drop table if exists Interactions;
 drop table if exists Molecules;
 drop type if exists Nucleic_Acid_Types;
 drop type if exists Molecule_Types;
@@ -47,6 +48,17 @@ create table Molecules (
     primary key (id)
 );
 
+create table Interactions (
+    molecule1_id            integer,
+    molecule2_id            integer,
+    category                text not null,
+    name                    text not null,
+    info                    text not null,
+    primary key (molecule1_id, molecule2_id, category),
+    foreign key (molecule1_id) references Molecules(id),
+    foreign key (molecule2_id) references Molecules(id)
+);
+
 create table Sequences (
     sequence                text,
     residue_no              integer not null,
@@ -73,10 +85,8 @@ create table Nucleic_Acids (
     origin                  text not null,
     type                    Nucleic_Acid_Types not null,
     hydrolysed_by           text,
-    codes_for               integer,
     primary key (id),
-    foreign key (id) references Molecules(id),
-    foreign key (codes_for) references Proteins(id)
+    foreign key (id) references Molecules(id)
 );
 
 create table Lipids (
@@ -104,53 +114,3 @@ create table Carbohydrates (
     primary key (id),
     foreign key (id) references Molecules(id)
 );
-
-create table Protein_Binds_To_Nucleic_Acid (
-    protein_id              integer,
-    nucleic_acid_id         integer,
-    effect                  text,
-    motif                   text not null,
-    info                    text,
-    primary key (protein_id, nucleic_acid_id),
-    foreign key (protein_id) references Proteins(id),
-    foreign key (nucleic_acid_id) references Nucleic_Acids(id)
-);
-
-create table Protein_Cleaves_Nucleic_Acid (
-    protein_id              integer,
-    nucleic_acid_id         integer,
-    bases                   Bases not null,
-    type                    text not null,
-    info                    text,
-    primary key (protein_id, nucleic_acid_id),
-    foreign key (protein_id) references Proteins(id),
-    foreign key (nucleic_acid_id) references Nucleic_Acids(id)
-);
-
-create table Protein_Synthesises_Carbohydrate (
-    protein_id              integer,
-    carbohydrate_id         integer,
-    info                    text,
-    primary key (protein_id, carbohydrate_id),
-    foreign key (protein_id) references Proteins(id),
-    foreign key (carbohydrate_id) references Carbohydrates(id)
-);
-
-create table Protein_Synthesises_Lipid (
-    protein_id              integer,
-    lipid_id         integer,
-    info                    text,
-    primary key (protein_id, lipid_id),
-    foreign key (protein_id) references Proteins(id),
-    foreign key (lipid_id) references Lipids(id)
-);
-
-create table Protein_Subunit_For_Protein (
-    proteinSub_id           integer,
-    protein_id              integer,
-    subunit_no              integer,
-    primary key (proteinSub_id, protein_id),
-    foreign key (proteinSub_id) references Proteins(id),
-    foreign key (protein_id) references Proteins(id)
-);
-
