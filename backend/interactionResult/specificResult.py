@@ -74,9 +74,9 @@ def getResult(id1, type1, id2, type2):
         #Include the type of the molecule/
         returnDict['molecule2']['type'] = (type2.lower()).capitalize()
 
-        query3 = "select * from    get" + "".join(type1.split(" ")) + "".join(type2.split(" ")) + "interactiondetail(%s, %s)"
+        query3 = "select * from getSpecificInteraction(%s, %s)"
 
-        cursor.execute(query3, [molecule1, molecule2])
+        cursor.execute(query3, [id1, id2])
         interactionInfo = cursor.fetchall()
         #interactionInfo currently contains all the tuples: [(category, name, info)]
         #category is simply the category of the interaction: codes for, binds to, etc.
