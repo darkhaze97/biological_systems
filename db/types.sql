@@ -34,3 +34,32 @@ create type nonSpecificInteractionInformation as (
     --More can be added depending on max(interactions molecules can have with each other)
     --This will not affect our database schema. It will only affect the functions in the database.
 );
+
+--==================FOR CONCEPT==========================
+create type conceptMoleculeInfo as (
+    molecule_name       text,
+    concept_name        text,
+    info                text
+);
+
+create type conceptInfo as (
+    concept_name        text,
+    info                text
+);
+
+--Id is included in the type below, so that the user can select a specific
+--concept.
+create type conceptBasicInfo as (
+    concept_id          text,
+    concept_name        text,
+    basic_info          text
+);
+
+--Molecule id is included below so that the user can select a specific molecule with a 
+--concept.
+create type conceptMoleculeBasicInfo as (
+    concept_name        text,
+    molecule_id         integer,
+    molecule_name       text,
+    basic_info          text
+);
