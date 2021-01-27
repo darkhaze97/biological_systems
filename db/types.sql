@@ -1,6 +1,10 @@
 --This file contains all the types that will be used across multiple sql files.
 drop type if exists interactionInfo cascade;
 drop type if exists nonSpecificInteractionInformation cascade;
+drop type if exists conceptMoleculeInfo cascade;
+drop type if exists conceptInfo cascade;
+drop type if exists conceptMoleculeBasicInfo cascade;
+drop type if exists conceptBasicInfo cascade;
 
 
 --=======================GENERAL===========================

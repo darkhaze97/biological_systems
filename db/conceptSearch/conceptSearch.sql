@@ -1,5 +1,8 @@
 --Written by Tim Huang
 
+--This file is for searching for MANY concepts at a time (i.e. general search). The user can then define
+--the specifics from these returns.
+
 --This function can return more than one Concept. The backend must allow the user to select
 --their desired concept.
 create or replace function
