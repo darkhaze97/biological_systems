@@ -6,8 +6,9 @@ from flask_cors import CORS
 import os
 from json import dumps
 
-from search import search
+from interactionSearch import search
 from interactionResult import getResult
+from biologicalConcepts import conceptSearch
 
 def defaultHandler(err):
     response = err.get_response()
@@ -42,6 +43,14 @@ def specificInteraction():
     specificInteractionInfo = getResult(payload['id1'], payload['type1'], payload['id2'], payload['type2'])
     print(specificInteractionInfo)
     return dumps(specificInteractionInfo)
+
+@APP.route("/concepts/results/all", methods=['POST'])
+def concepts():
+    payload = request.get_json()
+    print(payload)
+    conceptInfo = conceptSearch(payload['name'])
+    print(conceptInfo)
+    return dumps(conceptInfo)
 
 if __name__ == "__main__":
     APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))

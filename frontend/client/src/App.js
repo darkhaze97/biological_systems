@@ -2,8 +2,10 @@ import './App.css';
 import { Route, Switch, useHistory } from "react-router-dom";
 import InteractionPage from "./pages/InteractionPage";
 import MainPage from "./pages/MainPage";
-import ResultPage from "./pages/ResultPage";
-import SpecificResultPage from "./pages/SpecificResultPage"
+import InteractionResultPage from "./pages/InteractionResultPage";
+import SpecificResultPage from "./pages/SpecificResultPage";
+import ConceptPage from "./pages/ConceptPage";
+import ConceptResultPage from "./pages/ConceptResultPage";
 
 function App() {
 
@@ -23,6 +25,9 @@ function App() {
         <button onClick={() => history.push('/interactions')}>
           Interaction
         </button>
+        <button onClick={() => history.push('/concepts')}>
+          Concept
+        </button>
       </div>
 
       
@@ -39,11 +44,19 @@ function App() {
         <Route 
           exact 
           path='/interactions/results/all'
-          component={ResultPage}/>;
+          component={InteractionResultPage}/>;
         <Route
           exact
           path='/interactions/results/specific'
           component={SpecificResultPage}/>;
+        <Route
+          exact
+          path='/concepts'
+          component={ConceptPage}/>;
+        <Route
+          exact
+          path='/concepts/results/all'
+          component={ConceptResultPage}/>;
       </Switch>
 
     </div>

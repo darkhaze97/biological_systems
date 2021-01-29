@@ -14,8 +14,8 @@ declare
 begin
     for tup in
         select *
-            from    Concepts
-        where name ~* '^' || $1
+            from    Concepts c
+        where c.name ~* ('^' || $1)
     loop
         conceptInfo.concept_id = tup.id;
         conceptInfo.concept_name = tup.name;

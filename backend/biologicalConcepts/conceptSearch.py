@@ -6,6 +6,7 @@ import psycopg2
 # can select.
 def conceptSearch(name):
     db = None
+    ret_list = []
 
     try:
         db = psycopg2.connect("dbname=biological_systems")
@@ -19,7 +20,11 @@ def conceptSearch(name):
         cursor.execute(query, [name])
 
         for tup in cursor.fetchall():
-            #Here, I will handle the information...
-
+            conceptName = tup[0] + "/" + tup[1];
+            ret_list.append({conceptName: tup[2]})
     except psycopg2.Error as err:
         print(err)
+    finally:
+        if (db):
+            db.close()
+    return ret_list

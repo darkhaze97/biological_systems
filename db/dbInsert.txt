@@ -1,3 +1,9 @@
+psql -f molecules.sql biological_systems
+psql -f types.sql biological_systems
+psql -f ./searchQueries/searchQueries.sql biological_systems
+psql -f ./interactionResultQueries/specificInteractionQueries.sql biological_systems
+psql -f ./conceptSearch/conceptSearch.sql biological_systems
+psql -f ./conceptSearch/specificConceptSearch.sql biological_systems
 insert into Molecules values (0, 'DNA Polymerase III', 'Protein');
 insert into Molecules values (1, 'DNA Polymerase III Gene', 'Nucleic Acid');
 insert into Molecules values (2, 'Palmitate', 'Lipid');
@@ -10,3 +16,5 @@ insert into Interactions values (0, 1, 'Codes for', 'DNA Polymerase III Gene cod
 insert into Lipids values (2, 'Saturated', 'N/A', 'Fatty acid chain');
 insert into Proteins values (3, 'N/A', 'Eukaryotes', 'N/A', 'N/A', 'N/A', 'N/A', 'AAA');
 insert into Interactions values (3, 2, 'Synthesis', 'Fatty Acid Synthase synthesises Palmitate', 'info: Fatty Acid Synthase produces Palmitate after 7 cycles with Acetyl CoA as an input');
+insert into Concepts values (0, 'DNA Replication', 'Replication occurs by creating a leading and lagging strand', 'Replication!');
+insert into Incorporates values (0, 0, 'DNA Polymerase III carries out replication', 'DNA Polymerase III carries out replication for the leading and lagging strands from the 3 prime to 5 prime direction');
