@@ -8,7 +8,7 @@ from json import dumps
 
 from interactionSearch import search
 from interactionResult import getResult
-from biologicalConcepts import conceptSearch
+from biologicalConcepts import conceptSearch, specificConceptSearch
 
 def defaultHandler(err):
     response = err.get_response()

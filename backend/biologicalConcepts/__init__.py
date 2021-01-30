@@ -1,1 +1,1 @@
-from .conceptSearch import conceptSearch
+from .conceptSearch import conceptSearch, specificConceptSearch

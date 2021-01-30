@@ -28,3 +28,24 @@ def conceptSearch(name):
         if (db):
             db.close()
     return ret_list
+
+def specificConceptSearch(id):
+    db = None
+    ret_dict = {}
+    try:
+        db = psycopg2.connect("dbname=biological_systems")
+        cursor = db.cursor()
+        query = """
+                    select *
+                        from    specificConceptSearch(%s)
+                """
+        cursor.execute(query, [id])
+        tup = cursor.fetchone()
+        for i in range(0, len(tup)):
+            ret_dict[cursor.description[i][0]] = tup[i]
+    except psycopg2.Error as err:
+        print(err)
+    finally:
+        if (db):
+            db.close()
+    return ret_dict

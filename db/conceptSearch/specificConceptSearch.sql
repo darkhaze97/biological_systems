@@ -8,9 +8,9 @@ as $$
 declare
     info conceptInfo;
 begin
-    select name, info into info.concept_name, info.info
-        from    Concepts
-    where id = $1;
+    select c.name, c.info into info.concept_name, info.info
+        from    Concepts c
+    where c.id = $1;
     if (info is not null) then
         return next info;
     end if;
