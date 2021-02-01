@@ -62,7 +62,6 @@ create type conceptBasicInfo as (
 --Molecule id is included below so that the user can select a specific molecule with a 
 --concept.
 create type conceptMoleculeBasicInfo as (
-    concept_name        text,
     molecule_id         integer,
     molecule_name       text,
     basic_info          text

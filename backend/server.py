@@ -8,7 +8,7 @@ from json import dumps
 
 from interactionSearch import search
 from interactionResult import getResult
-from biologicalConcepts import conceptSearch, specificConceptSearch
+from biologicalConcepts import conceptSearch, specificConceptSearch, getConceptMolecules
 
 def defaultHandler(err):
     response = err.get_response()
@@ -49,8 +49,19 @@ def concepts():
     payload = request.get_json()
     print(payload)
     conceptInfo = conceptSearch(payload['name'])
-    print(conceptInfo)
     return dumps(conceptInfo)
 
-if __name__ == "__main__":
-    APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))
+@APP.route("/concepts/results/specific", methods=['POST'])
+def specificConcept():
+    ret_dict = {}
+    payload = request.get_json()
+    print(payload)
+    conceptSpecifics = specificConceptSearch(payload['id'])
+    ret_dict['conceptInfo'] = conceptSpecifics
+    conceptMolecules = getConceptMolecules(payload['id'])
+    ret_dict['conceptMolecules'] = conceptMolecules
+    return dumps(ret_dict)
+
+
+#if __name__ == "__main__":
+   # APP.run(port=(int(sys.argv[1]) if len(sys.argv) == 2 else 8080))

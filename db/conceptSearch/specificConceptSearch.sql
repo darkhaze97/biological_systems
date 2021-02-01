@@ -34,7 +34,6 @@ begin
                     join Molecules m on (i.molecule_id = m.id)
         where c.id = $1
     loop
-        info.concept_name = tup.concept_name;
         info.molecule_id = tup.id;
         info.molecule_name = tup.molecule_name;
         info.basic_info = tup.info;
