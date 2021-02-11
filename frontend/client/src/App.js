@@ -3,9 +3,10 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import InteractionPage from "./pages/InteractionPage";
 import MainPage from "./pages/MainPage";
 import InteractionResultPage from "./pages/InteractionResultPage";
-import SpecificResultPage from "./pages/SpecificResultPage";
+import SpecificInteractionPage from "./pages/SpecificInteractionPage";
 import ConceptPage from "./pages/ConceptPage";
 import ConceptResultPage from "./pages/ConceptResultPage";
+import SpecificConceptPage from "./pages/SpecificConceptPage"
 
 function App() {
 
@@ -48,7 +49,7 @@ function App() {
         <Route
           exact
           path='/interactions/results/specific'
-          component={SpecificResultPage}/>;
+          component={SpecificInteractionPage}/>;
         <Route
           exact
           path='/concepts'
@@ -57,6 +58,10 @@ function App() {
           exact
           path='/concepts/results/all'
           component={ConceptResultPage}/>;
+        <Route
+          exact
+          path='/concepts/results/specific'
+          component={SpecificConceptPage}/>;
       </Switch>
 
     </div>

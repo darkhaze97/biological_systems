@@ -109,5 +109,3 @@ const SpecificResultPage = (props) => {
 };
 
 export default SpecificResultPage;
-
-

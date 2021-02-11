@@ -50,7 +50,6 @@ def specificConceptSearch(id):
             db.close()
     return ret_dict
 
-
 def getConceptMolecules(id):
     db = None
     ret_list = []
@@ -73,3 +72,8 @@ def getConceptMolecules(id):
         if (db):
             db.close()
     return ret_list
+
+def getConceptMoleculeSpecific(id):
+    #This function gets in depth information about the molecule in relation to the concept.
+    db = None
+    ret_dict = {}
