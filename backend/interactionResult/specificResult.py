@@ -36,6 +36,9 @@ def getResult(id1, type1, id2, type2):
         db = psycopg2.connect("dbname=biological_systems")
         cursor = db.cursor()
 
+        ############################################################# USE getUpperType(id1 integer) to grab the upper type, so we
+        #################don't join with Molecules m only...
+
         #Below grabs the specific table for molecule 1.
         moleculeTableName1 = "_".join(type1.split(" ")) + "s"
         #Below grabs the specific table for molecule 2.

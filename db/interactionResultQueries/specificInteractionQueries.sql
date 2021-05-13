@@ -24,3 +24,11 @@ begin
     end loop;
 end
 $$ language plpgsql;
+
+create or replace function
+    getUpperType(id1 integer) returns text
+as $$
+    select cast(type as text)
+    from    Entities
+    where id1 = id
+$$ language sql;
