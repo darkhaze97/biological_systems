@@ -1,9 +1,18 @@
+psql -f entities.sql biological_systems
 psql -f molecules.sql biological_systems
 psql -f types.sql biological_systems
 psql -f ./searchQueries/searchQueries.sql biological_systems
 psql -f ./interactionResultQueries/specificInteractionQueries.sql biological_systems
 psql -f ./conceptSearch/conceptSearch.sql biological_systems
 psql -f ./conceptSearch/specificConceptSearch.sql biological_systems
+insert into Entities values (0, 'DNA Polymerase III', 'Molecule');
+insert into Entities values (1, 'DNA Polymerase III Gene', 'Molecule');
+insert into Entities values (2, 'Palmitate', 'Molecule');
+insert into Entities values (3, 'Fatty Acid Synthase', 'Molecule');
+insert into Entity_Interactions values (0, 1, 'Protein cleaves', 'DNA Polymerase III cleaves DNA Polymerase III Gene', 'motif: DNA Zipper?===###===info: Yay');
+insert into Entity_Interactions values (0, 1, 'Codes for', 'DNA Polymerase III Gene codes for DNA Polymerase III', 'Coding yay');
+
+
 insert into Molecules values (0, 'DNA Polymerase III', 'Protein');
 insert into Molecules values (1, 'DNA Polymerase III Gene', 'Nucleic Acid');
 insert into Molecules values (2, 'Palmitate', 'Lipid');

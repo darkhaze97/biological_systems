@@ -32,7 +32,7 @@ def search(molecule1, molecule1Type, molecule2, molecule2Type):
         #in plpgsql --> check specificSearch makeSpecificItem, because I can also put in the general case there, and then
         #make a general case object
 
-        cursor.execute("select * from searchMolecules(%s, %s, %s, %s)", [molecule1, molecule1Type, molecule2, molecule2Type])
+        cursor.execute("select * from searchInteractions(%s, %s, %s, %s)", [molecule1, molecule1Type, molecule2, molecule2Type])
         ret_list = handleInteractions(cursor.fetchall())
 
         

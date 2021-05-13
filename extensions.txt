@@ -13,3 +13,5 @@ biological concepts (as a standalone)
 bacterial search --> genomic and also non-genomic
 
 models
+
+Allow us to make a file that stores all the information about the molecules, so that we can just load this file in.
