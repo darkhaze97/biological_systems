@@ -43,20 +43,8 @@ create type Hormone_Types as enum('Steroid', 'Peptide', 'Amine', 'Eicosanoid');
 
 create table Molecules (
     id                      serial,
-    name                    text,
     type                    Molecule_Types,
     primary key (id)
-);
-
-create table Interactions (
-    molecule1_id            integer,
-    molecule2_id            integer,
-    category                text not null,
-    name                    text not null,
-    info                    text not null,
-    primary key (molecule1_id, molecule2_id, category),
-    foreign key (molecule1_id) references Molecules(id),
-    foreign key (molecule2_id) references Molecules(id)
 );
 
 create table Sequences (
@@ -83,7 +71,7 @@ create table Nucleic_Acids (
     id                      integer,
     sequence                Bases not null, 
     origin                  text not null,
-    type                    Nucleic_Acid_Types not null,
+    nucleic_acid_type       Nucleic_Acid_Types not null,
     hydrolysed_by           text,
     primary key (id),
     foreign key (id) references Molecules(id)

@@ -16,7 +16,7 @@ cur_path = os.path.dirname(__file__)
 #This should not be changed.
 PREDEFINED_SEPARATOR = "===###==="
 
-#Precond: Type1 and type2 are exactly one of the strings defined in molecules.sql, in the type Molecule_Types
+#Precond: Type1 and type2 are a lower type (e.g. Protein, Bacteria. NOT Molecules, Living, Non-living)
 def getResult(id1, type1, id2, type2):
     #Depending on the type, I will need to perform different searches...
     #I will dynamically get the query...
@@ -39,22 +39,42 @@ def getResult(id1, type1, id2, type2):
         ############################################################# USE getUpperType(id1 integer) to grab the upper type, so we
         #################don't join with Molecules m only...
 
-        #Below grabs the specific table for molecule 1.
-        moleculeTableName1 = "_".join(type1.split(" ")) + "s"
-        #Below grabs the specific table for molecule 2.
-        moleculeTableName2 = "_".join(type2.split(" ")) + "s"
+        # Below are queries to get the upper type of the entity (e.g. Molecule, Living, Non-living)
+        queryString1 = f"select * from getUpperType({id1})"
+        queryString2 = f"select * from getUpperType({id2})"
 
-        queryString1 =   f"""
+        # Get the upper type of the first molecule.
+        cursor.execute(queryString1)
+        upperType1 = (cursor.fetchone())[0] + "s"
+
+        # Get the lower type of the second molecule.
+        cursor.execute(queryString2)
+        upperType2 = (cursor.fetchone())[0] + "s"
+
+        #Below changes upperType1 into a table name format.
+        "_".join(upperType1.split(" "))
+        #Below changes upperType2 into a table name format
+        "_".join(upperType2.split(" "))
+
+        #Below changes type1 into a table name format.
+        lowerType1 = "_".join(type1.split(" ")) + "s"
+        #Below changes type2 into a table name format.
+        lowerType2 = "_".join(type2.split(" ")) + "s"
+
+        queryString1 = f"""
                             select *
-                            from    Molecules m
-                                    join {moleculeTableName1} specm on (m.id = specm.id)
-                            where m.id = %s and m.type = %s
+                            from    Entities e
+                                    join {upperType1} ut1 on (ut1.id = e.id)
+                                    join {lowerType1} lt1 on (lt1.id = ut1.id)
+                            where e.id = %s and ut1.type = %s
                         """
-        queryString2 =  f"""
+
+        queryString2 = f"""
                             select *
-                            from    Molecules m
-                                    join {moleculeTableName2} specm on (m.id = specm.id)
-                            where m.id = %s and m.type = %s
+                            from    Entities e
+                                    join {upperType2} ut2 on (ut2.id = e.id)
+                                    join {lowerType2} lt2 on (lt2.id = ut2.id)
+                            where e.id = %s and ut2.type = %s
                         """
         #Grab information about molecule 1.
         cursor.execute(queryString1, [id1, type1])
@@ -63,7 +83,10 @@ def getResult(id1, type1, id2, type2):
         #The for loop below simply adds the information of molecule1 to the returnDictionary:
         #returnDict = {'molecule1': {'name': blah, 'bond_type': etc.}}
         for i in range(0, len(cursor.description)):
-            returnDict['molecule1'][cursor.description[i][0]] = molecule1Info[i] 
+            returnDict['molecule1'][cursor.description[i][0]] = molecule1Info[i]
+            #Note: even though there are two 'type' columns, this should not matter, since
+            #returnDict['molecule#'][type] is set to the lower type (by way of structuring the
+            #queries above)
         #Include the type of the molecule.
         returnDict['molecule1']['type'] = (type1.lower()).capitalize()
 
@@ -74,7 +97,7 @@ def getResult(id1, type1, id2, type2):
         #Refer to the comment above for the for loop below.
         for i in range(0, len(cursor.description)):
             returnDict['molecule2'][cursor.description[i][0]] = molecule2Info[i]
-        #Include the type of the molecule/
+        #Include the type of the molecule.
         returnDict['molecule2']['type'] = (type2.lower()).capitalize()
 
         query3 = "select * from getSpecificInteraction(%s, %s)"

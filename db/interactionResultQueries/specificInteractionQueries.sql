@@ -12,10 +12,10 @@ begin
 
     for tup in
         select *
-            from    Molecules m1
-                    join Interactions i on (m1.id = i.molecule1_id)
-                    join Molecules m2 on (m2.id = i.molecule2_id)
-        where m1.id = $1 and m2.id = $2
+            from    Entities e1
+                    join Entity_Interactions ei on (e1.id = ei.entity1_id)
+                    join Entities e2 on (e2.id = ei.entity2_id)
+        where e1.id = $1 and e2.id = $2
     loop
         interaction.category = tup.category;
         interaction.name = tup.name;
