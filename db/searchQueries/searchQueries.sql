@@ -119,11 +119,11 @@ begin
 
     if ($2 !~* '^Any') then
         queryString1 = queryString1 || ' and cast(e1.type as text) ~* ''^' || $2 || '''';
-        queryString2 = queryString2 || ' and cast(e1.type as text) ~* ''^' || $4 || '''';
+        queryString2 = queryString2 || ' and cast(e2.type as text) ~* ''^' || $2 || '''';
     end if;
     if ($4 !~* '^Any') then
         queryString1 = queryString1 || ' and cast(e2.type as text) ~* ''^' || $4 || '''';
-        queryString2 = queryString2 || ' and cast(e2.type as text) ~* ''^' || $2 || '''';
+        queryString2 = queryString2 || ' and cast(e1.type as text) ~* ''^' || $4 || '''';
     end if;
 
     for info in
