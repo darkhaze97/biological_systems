@@ -1,6 +1,6 @@
 #Helper functions for the search.
 
-
+#
 def handleInteractions(tups):
     ret_list = []
     for tup in tups:
