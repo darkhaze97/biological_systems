@@ -44,7 +44,8 @@ create type Hormone_Types as enum('Steroid', 'Peptide', 'Amine', 'Eicosanoid');
 create table Molecules (
     id                      serial,
     type                    Molecule_Types,
-    primary key (id)
+    primary key (id),
+    foreign key (id) references Entities(id)
 );
 
 create table Sequences (

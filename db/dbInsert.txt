@@ -1,8 +1,11 @@
 psql -f entities.sql biological_systems
 psql -f molecules.sql biological_systems
+psql -f livings.sql biological_systems
+psql -f non_livings.sql biological_systems
 psql -f types.sql biological_systems
+psql -f ./searchQueries/frontendPresentation.sql biological_systems
 psql -f ./searchQueries/searchQueries.sql biological_systems
-psql -f ./interactionResultQueries/specificInteractionQueries.sql biological_systems
+psql -f ./searchQueries/specificInteractionQueries.sql biological_systems
 psql -f ./conceptSearch/conceptSearch.sql biological_systems
 psql -f ./conceptSearch/specificConceptSearch.sql biological_systems
 insert into Entities values (0, 'DNA Polymerase III', 'Molecule');

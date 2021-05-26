@@ -4,3 +4,7 @@
 3. I am reading in queries from files instead of using if statements to improve extensibility.
 4. I cannot ensure the constraints are met for the interactions table, e.g. for bases, we only have AGUCT. This can be done in the backend when I am inserting
    a molecule.
+
+
+New ones:
+1. Eventually, after I am 'done' with interactions, I should look for places that I can abstract.

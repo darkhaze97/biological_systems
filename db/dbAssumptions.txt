@@ -1,0 +1,6 @@
+1. All the types of the Entities are written in a user-intelligible way.
+   i.e. we never write something like Viruss in Non_Living_Types, which is 
+   an enum. However, the tables themselves can be named in user-unintelligible
+   ways. E.g. Viruss as the table.
+2. The convention of writing out the table names is that we add an extra
+   's' in front of the table name to indicate plurality.

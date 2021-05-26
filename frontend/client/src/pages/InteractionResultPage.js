@@ -19,6 +19,16 @@ const ResultPage = (props) => {
         }
     })
 
+    if (data.length == 0) {
+        return (
+            <div class="App">
+                <h1>
+                    No matching information.
+                </h1>
+            </div>
+        )
+    }
+
     const handleSubmit = (event, molecule1Info, molecule2Info) => {
         event.preventDefault()
         var molecule1InfoArray = molecule1Info.split("/")
