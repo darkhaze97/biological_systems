@@ -6,8 +6,7 @@ from flask_cors import CORS
 import os
 from json import dumps
 
-from interactionSearch import search
-from interactionResult import getResult
+from interactionSearch import search, getResult, obtainEntityTypes
 from biologicalConcepts import conceptSearch, specificConceptSearch, getConceptMolecules
 
 def defaultHandler(err):
@@ -27,6 +26,13 @@ CORS(APP)
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
+#Interactions:
+
+@APP.route("/interactions/obtain/presentation", methods=['GET'])
+def interactionFrontendPresentation():
+    #We want to send the data to the caller.
+    return dumps(obtainEntityTypes())
+
 @APP.route("/interactions/results/all", methods=['POST'])
 def interactions():
     # We want to receive the data from the caller.
@@ -43,6 +49,8 @@ def specificInteraction():
     specificInteractionInfo = getResult(payload['id1'], payload['type1'], payload['id2'], payload['type2'])
     print(specificInteractionInfo)
     return dumps(specificInteractionInfo)
+
+#Concepts:
 
 @APP.route("/concepts/results/all", methods=['POST'])
 def concepts():

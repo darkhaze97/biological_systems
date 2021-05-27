@@ -1,1 +1,0 @@
-from .specificResult import getResult
