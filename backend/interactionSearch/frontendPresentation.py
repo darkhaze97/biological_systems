@@ -2,7 +2,7 @@
 
 import psycopg2
 
-def getSearchTypes():
+def obtainEntityTypes():
     db = None
     ret_dict = {'types': []}
     try:

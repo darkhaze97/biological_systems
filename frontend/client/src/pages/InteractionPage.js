@@ -15,6 +15,17 @@ const InteractionPage = ({...props}) => {
         setValues({ ...values, [name]: event.target.value });
     }
 
+    const obtainDropdowns = () => {
+        axios.get("http://127.0.0.1:8080/interactions/obtain/presentation")
+            .then((response) => {
+                console.log(response)
+                //Then after getting the response, put them into some variable so we can scan through it...
+            })
+        //Then afterward, make new elements and append them to the dropdown boxes...
+        //Use createElement()? and .appendChild? https://stackoverflow.com/questions/14004117/create-div-and-append-div-dynamically/14004145
+
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault()
 
@@ -30,7 +41,7 @@ const InteractionPage = ({...props}) => {
         <div class="App">
             <header>
                 <h3>
-                    Interactions between molecules
+                    Interactions between entities
                 </h3>
             </header>
             <form onSubmit={handleSubmit}>
