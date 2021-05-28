@@ -27,7 +27,7 @@ begin
         for lowerType in
             execute lowerTypeQuery
         loop
-            return next etype || '-' || lowerType;
+            return next etype || ' (' || lowerType || ')';
         end loop;
 
         return next etype;

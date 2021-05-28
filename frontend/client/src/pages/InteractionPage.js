@@ -1,29 +1,47 @@
 import React from "react";
 import axios from "axios";
-import { Button, TextField } from "@material-ui/core"
+import { Button, TextField, Select, FormControl, MenuItem, Menu, InputLabel } from "@material-ui/core"
 
-const InteractionPage = ({...props}) => {
+const InteractionPage = (props) => {
+
+    var entityTypesArray = JSON.parse(localStorage.getItem("entityTypes"));
+    console.log(entityTypesArray)
 
     const [values, setValues] = React.useState({
-        molecule1: '',
+        entity1: '',
         type1: '',
-        molecule2: '',
+        entity2: '',
         type2: '',
     })
+
+    const [types, setTypes] = React.useState({
+        type1: 'Any',
+        type2: '',
+    });
 
     const handleChange = name => event => {
         setValues({ ...values, [name]: event.target.value });
     }
 
-    const obtainDropdowns = () => {
-        axios.get("http://127.0.0.1:8080/interactions/obtain/presentation")
-            .then((response) => {
-                console.log(response)
-                //Then after getting the response, put them into some variable so we can scan through it...
-            })
-        //Then afterward, make new elements and append them to the dropdown boxes...
-        //Use createElement()? and .appendChild? https://stackoverflow.com/questions/14004117/create-div-and-append-div-dynamically/14004145
+    const handleTypeChange = event => {
+        const name = event.target.name
+        console.log("Hi")
+        console.log(name)
+        setTypes({ ...types, [name]: event.target.value})
+        console.log(types.type1)
+    }
 
+    const createDropdowns = () => {
+        return (         
+            entityTypesArray.map( function (item, index) {
+                console.log(item)
+                return (
+                    <MenuItem value={item}>
+                        {item}
+                    </MenuItem>
+                )
+            })
+        )
     }
 
     const handleSubmit = (event) => {
@@ -37,6 +55,8 @@ const InteractionPage = ({...props}) => {
             .catch((err) => {})
     }
 
+    console.log("I have reached here.")
+
     return (
         <div class="App">
             <header>
@@ -46,16 +66,38 @@ const InteractionPage = ({...props}) => {
             </header>
             <form onSubmit={handleSubmit}>
                 <TextField 
-                    label="Molecule 1"
+                    label="Entity 1"
                     variant="outlined"
                     type="text" 
-                    id="molecule1" 
-                    name="molecule1" 
+                    id="entity1" 
+                    name="entity1" 
                     value={values.molecule1} 
-                    onChange={handleChange("molecule1")}
-                /><br></br>
+                    onChange={handleChange("entity1")}
+                /><br></br> 
+                <div id="entity1type">
+                    <Button variant="contained" color="primary">
+                        Entity Type 1
+                    </Button>
+                </div>        
+                <FormControl style={{minWidth: 120}}>
+                    <InputLabel id="type1">Entity Type</InputLabel>
+                    <Select
+                     labelId="type1"
+                     id="type1"
+                     value={types.type1}
+                     onChange={handleTypeChange}
+                     inputProps={{name: 'type1'}}
+                     >
+                        <MenuItem value={"Any"}>
+                            Any
+                        </MenuItem>
+                        {createDropdowns()}
+                    </Select>   
+                </FormControl> 
+
+
                 <TextField
-                    label="Type of Molecule 1"
+                    label="Type of Entity 1"
                     variant="outlined"
                     type="text" 
                     id="type1" 
@@ -64,16 +106,16 @@ const InteractionPage = ({...props}) => {
                     onChange={handleChange("type1")} 
                 /><br></br>
                 <TextField
-                    label="Molecule 2"
+                    label="Entity 2"
                     variant="outlined"
                     type="text"
-                    id="molecule2"
-                    name="molecule2"
+                    id="entity2"
+                    name="entity2"
                     value={values.molecule2}
-                    onChange={handleChange("molecule2")}
+                    onChange={handleChange("entity2")}
                 /><br></br>
                 <TextField
-                    label="Type of Molecule 2"
+                    label="Type of Entity 2"
                     variant="outlined"
                     type="text"
                     id="type2"
@@ -87,6 +129,8 @@ const InteractionPage = ({...props}) => {
             </form>
         </div> 
     )
+
+    
 
 };
 

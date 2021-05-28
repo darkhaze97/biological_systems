@@ -38,7 +38,7 @@ def interactions():
     # We want to receive the data from the caller.
     payload = request.get_json()
     print(payload)
-    interaction_info = search(payload['molecule1'], payload['type1'], payload['molecule2'], payload['type2'])
+    interaction_info = search(payload['entity1'], payload['type1'], payload['entity2'], payload['type2'])
     print(interaction_info)
     return dumps(interaction_info)
 

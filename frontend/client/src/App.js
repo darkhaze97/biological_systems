@@ -1,4 +1,5 @@
 import './App.css';
+import axios from "axios";
 import { Route, Switch, useHistory } from "react-router-dom";
 import InteractionPage from "./pages/InteractionPage";
 import MainPage from "./pages/MainPage";
@@ -8,9 +9,22 @@ import ConceptPage from "./pages/ConceptPage";
 import ConceptResultPage from "./pages/ConceptResultPage";
 import SpecificConceptPage from "./pages/SpecificConceptPage"
 
-function App() {
+const App = ({...props}) => {
 
   const history = useHistory();
+
+
+
+  const interactionsMainPage = () => {
+    axios.get("http://127.0.0.1:8080/interactions/obtain/presentation")
+      .then((response) => {
+        console.log(response.data);
+
+        localStorage.setItem("entityTypes", JSON.stringify(response.data.types))
+      })
+      .catch((err) => {})
+      history.push("/interactions")
+  }
 
   return (
     <div>
@@ -23,7 +37,7 @@ function App() {
         <button onClick={() => history.push('/')}>
           Home
         </button>
-        <button onClick={() => history.push('/interactions')}>
+        <button onClick={interactionsMainPage}>
           Interaction
         </button>
         <button onClick={() => history.push('/concepts')}>
