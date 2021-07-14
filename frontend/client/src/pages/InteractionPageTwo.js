@@ -29,17 +29,15 @@ const ResultPage = (props) => {
         )
     }
 
-    const handleSubmit = (event, molecule1Info, molecule2Info) => {
+    const handleSubmit = (event, entity1Info, entity2Info) => {
         event.preventDefault()
-        var molecule1InfoArray = molecule1Info.split("/")
-        const id1 = molecule1InfoArray[0]
-        const molecule1 = molecule1InfoArray[1]
-        const type1 = molecule1InfoArray[2]
+        var entity1InfoArray = entity1Info.split("/")
+        const id1 = entity1InfoArray[0]
+        const type1 = entity1InfoArray[2]
 
-        var molecule2InfoArray = molecule2Info.split("/")
-        const id2 = molecule2InfoArray[0]
-        const molecule2 = molecule2InfoArray[1]
-        const type2 = molecule2InfoArray[2]
+        var entity2InfoArray = entity2Info.split("/")
+        const id2 = entity2InfoArray[0]
+        const type2 = entity2InfoArray[2]
 
         const values = {
             id1: Number(id1),
@@ -60,13 +58,13 @@ const ResultPage = (props) => {
         return (
             data.map(function (item, index) {
                 return(
-                    Object.entries(item).map(([molecule1, innerItem]) => {
+                    Object.entries(item).map(([entity1, innerItem]) => {
                         return (
-                            Object.entries(innerItem).map(([molecule2, interactionInfo]) => {
+                            Object.entries(innerItem).map(([entity2, interactionInfo]) => {
                                 return (
                                     <div>
-                                        <Button onClick={(e) => handleSubmit(e, molecule1, molecule2)} variant="contained" color="primary">
-                                            {molecule1} --{">"} {deconstructArrayIntoString(interactionInfo)} {molecule2}
+                                        <Button onClick={(e) => handleSubmit(e, entity1, entity2)} variant="contained" color="primary">
+                                            {entity1} --{">"} {deconstructArrayIntoString(interactionInfo)} {entity2}
                                         </Button>
                                     </div>
                                 )

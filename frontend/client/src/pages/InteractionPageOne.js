@@ -5,18 +5,16 @@ import { Button, TextField, Select, FormControl, MenuItem, Menu, InputLabel } fr
 const InteractionPage = (props) => {
 
     var entityTypesArray = JSON.parse(localStorage.getItem("entityTypes"));
-    console.log(entityTypesArray)
+
 
     const [values, setValues] = React.useState({
         entity1: '',
-        type1: '',
         entity2: '',
-        type2: '',
     })
 
     const [types, setTypes] = React.useState({
         type1: 'Any',
-        type2: '',
+        type2: 'Any',
     });
 
     const handleChange = name => event => {
@@ -25,16 +23,13 @@ const InteractionPage = (props) => {
 
     const handleTypeChange = event => {
         const name = event.target.name
-        console.log("Hi")
-        console.log(name)
         setTypes({ ...types, [name]: event.target.value})
-        console.log(types.type1)
     }
 
     const createDropdowns = () => {
         return (         
             entityTypesArray.map( function (item, index) {
-                console.log(item)
+              //  console.log(item)
                 return (
                     <MenuItem value={item}>
                         {item}
@@ -46,8 +41,8 @@ const InteractionPage = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-
-        axios.post("http://127.0.0.1:8080/interactions/results/all", {...values})
+        
+        axios.post("http://127.0.0.1:8080/interactions/results/all", {...values, ...types})
             .then((response) => {
                 console.log(response)
                 props.history.push('/interactions/results/all', {response: response.data})
@@ -73,14 +68,9 @@ const InteractionPage = (props) => {
                     name="entity1" 
                     value={values.molecule1} 
                     onChange={handleChange("entity1")}
-                /><br></br> 
-                <div id="entity1type">
-                    <Button variant="contained" color="primary">
-                        Entity Type 1
-                    </Button>
-                </div>        
-                <FormControl style={{minWidth: 120}}>
-                    <InputLabel id="type1">Entity Type</InputLabel>
+                /><br></br>     
+                <FormControl style={{minWidth: 200}}>
+                    <InputLabel id="type1">Entity 1 Type</InputLabel>
                     <Select
                      labelId="type1"
                      id="type1"
@@ -93,18 +83,8 @@ const InteractionPage = (props) => {
                         </MenuItem>
                         {createDropdowns()}
                     </Select>   
-                </FormControl> 
-
-
-                <TextField
-                    label="Type of Entity 1"
-                    variant="outlined"
-                    type="text" 
-                    id="type1" 
-                    name="type1" 
-                    value={values.type1} 
-                    onChange={handleChange("type1")} 
-                /><br></br>
+                </FormControl>
+                <br></br>
                 <TextField
                     label="Entity 2"
                     variant="outlined"
@@ -114,15 +94,22 @@ const InteractionPage = (props) => {
                     value={values.molecule2}
                     onChange={handleChange("entity2")}
                 /><br></br>
-                <TextField
-                    label="Type of Entity 2"
-                    variant="outlined"
-                    type="text"
-                    id="type2"
-                    name="type2"
-                    value={values.type2}
-                    onChange={handleChange("type2")}
-                /><br></br>
+                <FormControl style={{minWidth: 200}}>
+                    <InputLabel id="type2">Entity 2 Type</InputLabel>
+                    <Select
+                     labelId="type2"
+                     id="type2"
+                     value={types.type2}
+                     onChange={handleTypeChange}
+                     inputProps={{name: 'type2'}}
+                     >
+                        <MenuItem value={"Any"}>
+                            Any
+                        </MenuItem>
+                        {createDropdowns()}
+                    </Select>   
+                </FormControl>
+                <br></br>
                 <Button type="submit" variant="contained" color="primary">
                     Submit
                 </Button>

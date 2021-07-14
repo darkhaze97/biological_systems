@@ -1,4 +1,0 @@
-Assumption 1: I will be assuming that all molecules in each category have a unique name.
-              In that case, that means that IF there are molecules with the same name,
-              I will simply change the name to: "name_of_molecule" (2). This is to make 
-              searching O(n)

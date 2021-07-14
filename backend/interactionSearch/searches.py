@@ -40,18 +40,23 @@ def search(entity1, entity1Type, entity2, entity2Type):
 
         entity1TypeArray = entity1Type.split(" (")
         entity1TypeUpper = entity1TypeArray[0]
-        entity1TypeLower = entity1TypeArray[1]
-        #Remove the '(' and ')' in front of entity1TypeLower.
-        entity1TypeLower = entity1TypeLower[:len(entity1TypeLower) - 1]
+        #Check if there was a lower type specified before obtaining it.
+        entity1TypeLower = ""
+        if (len(entity1TypeArray) > 1):
+            entity1TypeLower = entity1TypeArray[1]
+            #Remove the '(' and ')' in front of entity1TypeLower.
+            entity1TypeLower = entity1TypeLower[:len(entity1TypeLower) - 1]
 
         print(entity1TypeUpper)
         print(entity1TypeLower)
 
         entity2TypeArray = entity2Type.split(" (")
         entity2TypeUpper = entity2TypeArray[0]
-        entity2TypeLower = entity2TypeArray[1]
-        #Remove the '(' and ')' in front of the entity2TypeLower.
-        entity2TypeLower = entity2TypeLower[:len(entity2TypeLower) - 1]
+        entity2TypeLower = ""
+        if (len(entity2TypeArray) > 1):
+            entity2TypeLower = entity2TypeArray[1]
+            #Remove the '(' and ')' in front of the entity2TypeLower.
+            entity2TypeLower = entity2TypeLower[:len(entity2TypeLower) - 1]
 
         cursor.execute("select * from searchInteractions(%s, %s, %s, %s)", [entity1, entity1TypeUpper, entity2, entity2TypeUpper])
 
@@ -63,6 +68,12 @@ def search(entity1, entity1Type, entity2, entity2Type):
             print(tup)
             if ((tup[1] == entity1TypeLower and tup[4] == entity2TypeLower) or
                 (tup[1] == entity2TypeLower and tup[4] == entity1TypeLower)):
+                filtered_tups.append(tup)
+            elif (entity1TypeUpper == "Any" and entity2TypeUpper == "Any"):
+                filtered_tups.append(tup)
+            elif (entity1TypeUpper == "Any" and (tup[4] == entity2TypeLower or tup[1] == entity2TypeLower)):
+                filtered_tups.append(tup)
+            elif (entity2TypeUpper == "Any" and (tup[4] == entity1TypeLower or tup[1] == entity1TypeLower)):
                 filtered_tups.append(tup)
 
         print(filtered_tups)

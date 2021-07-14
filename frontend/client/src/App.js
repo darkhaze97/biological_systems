@@ -1,9 +1,9 @@
 import './App.css';
 import axios from "axios";
 import { Route, Switch, useHistory } from "react-router-dom";
-import InteractionPage from "./pages/InteractionPage";
+import InteractionPage from "./pages/InteractionPageOne";
 import MainPage from "./pages/MainPage";
-import InteractionResultPage from "./pages/InteractionResultPage";
+import InteractionResultPage from "./pages/InteractionPageTwo";
 import SpecificInteractionPage from "./pages/SpecificInteractionPage";
 import ConceptPage from "./pages/ConceptPage";
 import ConceptResultPage from "./pages/ConceptResultPage";
