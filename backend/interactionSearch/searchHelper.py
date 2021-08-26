@@ -41,7 +41,9 @@ def handleInteractions(tups):
                 for interactions2 in interactionDictInner:
                     if (entity1 in interactions2.keys()):
                         #If the above is true, then that means that the current value in tup considers the reverse
-                        #case of the interaction.
+                        #case of the interaction. Group this interaction together with the previous
+                        #one. This is to allow differentiation of entities that interact with
+                        #each other.
                         interactions.update(interaction_dict)
                         added = True
                         break
