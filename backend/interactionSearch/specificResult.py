@@ -78,27 +78,27 @@ def getResult(id1, type1, id2, type2):
                         """
         #Grab information about molecule 1.
         cursor.execute(queryString1, [id1, type1])
-        molecule1Info = cursor.fetchone()
-        returnDict['molecule1'] = {}
-        #The for loop below simply adds the information of molecule1 to the returnDictionary:
-        #returnDict = {'molecule1': {'name': blah, 'bond_type': etc.}}
+        entity1Info = cursor.fetchone()
+        returnDict['entity1'] = {}
+        #The for loop below simply adds the information of entity1 to the returnDictionary:
+        #returnDict = {'entity1': {'name': blah, 'bond_type': etc.}}
         for i in range(0, len(cursor.description)):
-            returnDict['molecule1'][cursor.description[i][0]] = molecule1Info[i]
+            returnDict['entity1'][cursor.description[i][0]] = entity1Info[i]
             #Note: even though there are two 'type' columns, this should not matter, since
             #returnDict['molecule#'][type] is set to the lower type (by way of structuring the
             #queries above)
         #Include the type of the molecule.
-        returnDict['molecule1']['type'] = (type1.lower()).capitalize()
+        returnDict['entity1']['type'] = (type1.lower()).capitalize()
 
         #Grab information about molecule 2.
         cursor.execute(queryString2, [id2, type2])
-        molecule2Info = cursor.fetchone()
-        returnDict['molecule2'] = {}
+        entity2Info = cursor.fetchone()
+        returnDict['entity2'] = {}
         #Refer to the comment above for the for loop below.
         for i in range(0, len(cursor.description)):
-            returnDict['molecule2'][cursor.description[i][0]] = molecule2Info[i]
+            returnDict['entity2'][cursor.description[i][0]] = entity2Info[i]
         #Include the type of the molecule.
-        returnDict['molecule2']['type'] = (type2.lower()).capitalize()
+        returnDict['entity2']['type'] = (type2.lower()).capitalize()
 
         query3 = "select * from getSpecificInteraction(%s, %s)"
 
@@ -139,7 +139,7 @@ def getResult(id1, type1, id2, type2):
                 infoText = ": ".join(splitText)
                 returnDict['interactions'][tup[0]][infoColumn][key] = infoText
 
-        #Return will look like: {molecule1: {info1: blah, info2: blah}, molecule2: {info1: blah, info2: blah},
+        #Return will look like: {entity1: {info1: blah, info2: blah}, entity2: {info1: blah, info2: blah},
         #                        interactions: {codes_for: {info1: blah, info2: blah}, binds_to: {info1: blah}}}
     except IOError or psycopg2.Error as err:
         print(err)

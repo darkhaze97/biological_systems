@@ -5,14 +5,14 @@ const SpecificResultPage = (props) => {
     const data = props.location.state.response
     console.log(data)
 
-    const handleMolecule1 = () => {
-        const molecule1 = data.molecule1
+    const handleEntity1 = () => {
+        const entity1 = data.entity1
         return (
             <div>
                 <h1>
-                    {molecule1.name} ({molecule1.type})
+                    {entity1.name} ({entity1.type})
                 </h1>
-                {Object.entries(molecule1).map(([infoColumn, info]) => {
+                {Object.entries(entity1).map(([infoColumn, info]) => {
                     return (
                         <div>
                             {infoColumn !== "name" && infoColumn !== "type" && infoColumn !== "id" &&
@@ -24,14 +24,14 @@ const SpecificResultPage = (props) => {
         )
     }
 
-    const handleMolecule2 = () => {
-        const molecule2 = data.molecule2
+    const handleEntity2 = () => {
+        const entity2 = data.entity2
         return (
             <div>
                 <h1>
-                    {molecule2.name} ({molecule2.type})
+                    {entity2.name} ({entity2.type})
                 </h1>
-                {Object.entries(molecule2).map(([infoColumn, info]) => {
+                {Object.entries(entity2).map(([infoColumn, info]) => {
                     return (
                         <div>
                             {infoColumn !== "name" && infoColumn !== "type" && infoColumn !== "id" &&
@@ -95,10 +95,10 @@ const SpecificResultPage = (props) => {
         <div class="component-padding">
             <div class="rowC">
                 <p class="Interaction-border">
-                    {handleMolecule1()}
+                    {handleEntity1()}
                 </p>
                 <p class="Interaction-border">
-                    {handleMolecule2()}
+                    {handleEntity2()}
                 </p>
             </div>
             <p class="Interaction-border">
