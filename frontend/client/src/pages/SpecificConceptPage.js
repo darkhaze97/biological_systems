@@ -5,9 +5,9 @@ const SpecificConceptPage = (props) => {
     const data = props.location.state.response
     console.log(data)
     const conceptInfo = data.conceptInfo
-    const conceptMolecules = data.conceptMolecules
+    const conceptEntities = data.conceptEntities
     const id = 0
-    axios.post("http://127.0.0.1:8080/concepts/results/molecules/information", {id})
+    axios.post("http://127.0.0.1:8080/concepts/results/entities/information", {id})
     .then((response) => {
         console.log(response)
     // props.history.push('/concepts/results/specific', {response: response.data})
@@ -15,7 +15,7 @@ const SpecificConceptPage = (props) => {
     .catch((err) => {})
 
     const handleSubmit = (event, id) => {
-        axios.post("http://127.0.0.1:8080/concepts/results/molecules/information", {id})
+        axios.post("http://127.0.0.1:8080/concepts/results/entities/information", {id})
         .then((response) => {
             console.log(response)
         // props.history.push('/concepts/results/specific', {response: response.data})
@@ -39,9 +39,9 @@ const SpecificConceptPage = (props) => {
         )
     }
 
-    const deconstructConceptMolecules = () => {
+    const deconstructConceptEntities = () => {
         return (
-            conceptMolecules.map(function (item, index) {
+            conceptEntities.map(function (item, index) {
                 return (
                     <Button>
                         {Object.entries(item).map(([columnName, info]) => {
@@ -66,9 +66,9 @@ const SpecificConceptPage = (props) => {
             </div>
             <div class="component-padding">
                 <p>
-                    Molecule contributions
+                    Entity contributions
                 </p>
-                {deconstructConceptMolecules()}
+                {deconstructConceptEntities()}
             </div>
         </div>
 

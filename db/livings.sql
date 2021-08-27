@@ -5,7 +5,7 @@ drop type if exists GramReaction;
 
 create type Living_Types as enum('Bacteria', 'Fungi', 'Eukaryote');
 
-create type GramReaction as enum('Positive', 'Negative', 'Not Applicable')
+create type GramReaction as enum('Positive', 'Negative', 'Not Applicable');
 
 --Tables/relations:
 

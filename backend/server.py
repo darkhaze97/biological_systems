@@ -7,7 +7,7 @@ import os
 from json import dumps
 
 from interactionSearch import search, getResult, obtainEntityTypes
-from biologicalConcepts import conceptSearch, specificConceptSearch, getConceptMolecules
+from biologicalConcepts import conceptSearch, specificConceptSearch, getConceptEntities, getConceptEntitySpecific
 
 def defaultHandler(err):
     response = err.get_response()
@@ -66,13 +66,16 @@ def specificConcept():
     print(payload)
     conceptSpecifics = specificConceptSearch(payload['id'])
     ret_dict['conceptInfo'] = conceptSpecifics
-    conceptMolecules = getConceptMolecules(payload['id'])
-    ret_dict['conceptMolecules'] = conceptMolecules
+    conceptEntities = getConceptEntities(payload['id'])
+    ret_dict['conceptEntities'] = conceptEntities
     return dumps(ret_dict)
 
-@APP.route("/concepts/results/molecules/information", methods=['POST'])
-def specificConceptMoleculesInformation():
+@APP.route("/concepts/results/entities/information", methods=['POST'])
+def specificConceptEntitiesInformation():
     payload = request.get_json()
+    print(payload)
+    ret_dict = getConceptEntitySpecific(payload)
+    return ret_dict
     
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ psql -f entities.sql biological_systems
 psql -f molecules.sql biological_systems
 psql -f livings.sql biological_systems
 psql -f non_livings.sql biological_systems
+psql -f concepts.sql biological_systems
 psql -f types.sql biological_systems
 psql -f ./searchQueries/frontendPresentation.sql biological_systems
 psql -f ./searchQueries/searchQueries.sql biological_systems
@@ -14,8 +15,6 @@ insert into Entities values (2, 'Palmitate', 'Molecule');
 insert into Entities values (3, 'Fatty Acid Synthase', 'Molecule');
 insert into Entity_Interactions values (0, 1, 'Protein cleaves', 'DNA Polymerase III cleaves DNA Polymerase III Gene', 'motif: DNA Zipper?===###===info: Yay');
 insert into Entity_Interactions values (1, 0, 'Codes for', 'DNA Polymerase III Gene codes for DNA Polymerase III', 'Coding yay');
-
-
 insert into Molecules values (0, 'Protein');
 insert into Molecules values (1, 'Nucleic Acid');
 insert into Molecules values (2, 'Lipid');
@@ -23,8 +22,6 @@ insert into Molecules values (3, 'Protein');
 insert into Sequences values ('AAA', 3);
 insert into Proteins values (0, 'N/A', 'Eukaryotes', 'N/A', 'N/A', 'N/A', 'N/A', 'AAA');
 insert into Nucleic_Acids values (1, 'AUG', 'Eukaryotes', 'DNA', 'N/A');
-#insert into Interactions values (0, 1, 'Protein cleaves', 'DNA Polymerase III cleaves DNA Polymerase III Gene', 'motif: DNA Zipper?===###===info: Yay');
-#insert into Interactions values (0, 1, 'Codes for', 'DNA Polymerase III Gene codes for DNA Polymerase III', 'Coding yay');
 insert into Lipids values (2, 'Saturated', 'N/A', 'Fatty acid chain');
 insert into Proteins values (3, 'N/A', 'Eukaryotes', 'N/A', 'N/A', 'N/A', 'N/A', 'AAA');
 #insert into Interactions values (3, 2, 'Synthesis', 'Fatty Acid Synthase synthesises Palmitate', 'info: Fatty Acid Synthase produces Palmitate after 7 cycles with Acetyl CoA as an input');

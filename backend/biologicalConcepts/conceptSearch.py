@@ -50,7 +50,7 @@ def specificConceptSearch(id):
             db.close()
     return ret_dict
 
-def getConceptMolecules(id):
+def getConceptEntities(id):
     db = None
     ret_list = []
     try:
@@ -58,7 +58,7 @@ def getConceptMolecules(id):
         cursor = db.cursor()
         query = """
                     select *
-                        from    getConceptMolecules(%s)
+                        from    getConceptEntities(%s)
                 """
         cursor.execute(query, [id])
         conceptDict = {}
@@ -73,7 +73,8 @@ def getConceptMolecules(id):
             db.close()
     return ret_list
 
-def getConceptMoleculeSpecific(id):
+def getConceptEntitySpecific(id):
     #This function gets in depth information about the molecule in relation to the concept.
     db = None
     ret_dict = {}
+    return ret_dict

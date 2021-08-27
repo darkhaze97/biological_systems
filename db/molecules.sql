@@ -111,13 +111,3 @@ create table Concepts (
     info                    text,
     primary key (id)
 );
-
-create table Incorporates (
-    concept_id              integer,
-    molecule_id             integer,
-    basic_info              text,
-    info                    text,
-    primary key (concept_id, molecule_id),
-    foreign key (concept_id) references Concepts(id),
-    foreign key (molecule_id) references Concepts(id)
-);

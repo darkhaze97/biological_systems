@@ -27,12 +27,12 @@ create type interactionInfo as (
 );
 
 create type nonSpecificInteractionInformation as (
-    molecule1name       text,
-    molecule1type       text,
-    molecule1id         integer,
-    molecule2name       text,
-    molecule2type       text,
-    molecule2id         integer,
+    entity1name       text,
+    entity1type       text,
+    entity1id         integer,
+    entity2name       text,
+    entity2type       text,
+    entity2id         integer,
     interaction_info    text
 
     --More can be added depending on max(interactions molecules can have with each other)
@@ -40,8 +40,8 @@ create type nonSpecificInteractionInformation as (
 );
 
 --==================FOR CONCEPT==========================
-create type conceptMoleculeInfo as (
-    molecule_name       text,
+create type conceptEntityInfo as (
+    entity_name         text,
     concept_name        text,
     info                text
 );
@@ -61,8 +61,8 @@ create type conceptBasicInfo as (
 
 --Molecule id is included below so that the user can select a specific molecule with a 
 --concept.
-create type conceptMoleculeBasicInfo as (
-    molecule_id         integer,
-    molecule_name       text,
+create type conceptEntityBasicInfo as (
+    entity_id           integer,
+    entity_name         text,
     basic_info          text
 );

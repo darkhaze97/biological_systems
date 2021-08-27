@@ -21,21 +21,21 @@ $$ language plpgsql;
 --this concept. This information will be presented as a hyperlink.
 --id contains the id of the concept that the user is looking at.
 create or replace function
-    getConceptMolecules(id integer) returns setof conceptMoleculeBasicInfo
+    getConceptEntities(id integer) returns setof conceptEntityBasicInfo
 as $$
 declare
-    info conceptMoleculeBasicInfo;
+    info conceptEntityBasicInfo;
     tup record;
 begin
     for tup in
-        select c.name as concept_name, m.id, m.name as molecule_name, i.info
+        select c.name as concept_name, e.id, e.name as entity_name, i.info
             from    Concepts c
                     join Incorporates i on (i.concept_id = c.id)
-                    join Molecules m on (i.molecule_id = m.id)
+                    join Entities e on (i.entity_id = e.id)
         where c.id = $1
     loop
-        info.molecule_id = tup.id;
-        info.molecule_name = tup.molecule_name;
+        info.entity_id = tup.id;
+        info.entity_name = tup.entity_name;
         info.basic_info = tup.info;
         return next info;
     end loop;
@@ -43,21 +43,21 @@ end
 $$ language plpgsql;
 
 create or replace function
-    specificConceptMoleculeSearch(id integer) returns setof conceptMoleculeInfo
+    specificConceptEntitySearch(id integer) returns setof conceptEntityInfo
 as $$
 declare
-    info conceptMoleculeInfo;
+    info conceptEntityInfo;
     tup record;
 begin
     for tup in
-        select c.name as concept_name, i.info, m.name as molecule_name
+        select c.name as concept_name, i.info, e.name as entity_name
             from    Concepts c
                     join Incorporates i on (i.concept_id = c.id)
-                    join Molecules m on (m.id = i.molecule_id)
+                    join Entities m on (e.id = i.entity_id)
         where c.id = $1
     loop
         info.concept_name = tup.concept_name;
-        info.molecule_name = tup.molecule_name;
+        info.entity_name = tup.entity_name;
         info.info = tup.info;
         return next info;
     end loop;

@@ -1,5 +1,6 @@
 drop table if exists Entity_Interactions;
 drop table if exists Entities;
+drop table if exists Incorporates;
 drop type if exists Entity_Types;
 
 create type Entity_Types as enum('Molecule', 'Living', 'Non-Living');

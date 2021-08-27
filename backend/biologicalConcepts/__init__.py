@@ -1,1 +1,1 @@
-from .conceptSearch import conceptSearch, specificConceptSearch, getConceptMolecules
+from .conceptSearch import conceptSearch, specificConceptSearch, getConceptEntities, getConceptEntitySpecific
